@@ -1,24 +1,31 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018 FIRST. All Rights Reserved.                             */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.robot.RobotMap;
 
 /**
- * Add your docs here.
+ * Drive train subsystem for the robot.
  */
 public class DriveTrain extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
+  SpeedController leftDriveMotor = RobotMap.driveMotor1;
+  SpeedController rightDriveMotor = RobotMap.driveMotor2;
+  DifferentialDrive driveControl = new DifferentialDrive(leftDriveMotor, rightDriveMotor); 
+
+  public void tankDrive(){
+    driveControl.tankDrive(OI.leftStick.getY(), OI.rightStick.getY()); 
+  }
+
+  public void arcadeDrive(){
+    driveControl.arcadeDrive(OI.leftStick.getY(), OI.leftStick.getX());
+  }
+
   @Override
   public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
+    // Default command for the drive train.
+    //setDefaultCommand(new TeleopDrive());
   }
 }
