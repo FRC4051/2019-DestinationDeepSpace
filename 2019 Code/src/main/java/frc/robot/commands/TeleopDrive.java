@@ -1,7 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.*;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Command; 
 import frc.robot.Robot;
 
 public class TeleopDrive extends Command {
@@ -21,10 +21,10 @@ public class TeleopDrive extends Command {
   protected void execute() {
     switch (Robot.driveMode) {
       case 1:
-        driveTrain.tankDrive();
+        Robot.driveTrain.tankDrive();
         break;
       case 2:
-        driveTrain.arcadeDrive();
+        Robot.driveTrain.arcadeDrive();
         break;
       default:
         break;

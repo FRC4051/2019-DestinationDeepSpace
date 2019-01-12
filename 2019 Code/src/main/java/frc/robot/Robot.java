@@ -1,7 +1,11 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.commands.TeleopDrive;
+import edu.wpi.first.wpilibj.command.Scheduler;
+
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -12,7 +16,7 @@ import frc.robot.subsystems.DriveTrain;
 public class Robot extends TimedRobot {
   public static DriveTrain driveTrain;
   public static int driveMode; 
-  public static teleopDrive;
+  public static Command teleopDrive;
   //Command m_autonomousCommand;
   //SendableChooser<Command> m_chooser = new SendableChooser<>();
 
