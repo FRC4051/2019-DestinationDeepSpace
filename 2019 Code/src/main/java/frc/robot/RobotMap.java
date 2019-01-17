@@ -10,6 +10,6 @@ import edu.wpi.first.wpilibj.*;
  */
 public class RobotMap {
 
-  public static Victor driveMotor1 = new Victor(0);
-  public static Victor driveMotor2 = new Victor(1);
+  public static Talon driveMotor1 = new Talon(0);
+  public static Talon driveMotor2 = new Talon(1);
 }
