@@ -37,4 +37,20 @@ public class OI {
 
   public static Joystick leftStick = new Joystick(0);
   public static Joystick rightStick = new Joystick(1);
+
+  public static JoystickButton 
+  button1 = new JoystickButton(leftStick, 6),
+  button2 = new JoystickButton(leftStick, 7),
+  button3 = new JoystickButton(leftStick, 8),
+  button4 = new JoystickButton(leftStick, 9),
+  button5 = new JoystickButton(leftStick, 10),
+  button6 = new JoystickButton(leftStick, 11);
+
+  button1.whenPressed(new LiftToSpecificHeight(1));
+	button2.whenPressed(new LiftToSpecificHeight(2));
+	button3.whenPressed(new LiftToSpecificHeight(3));
+	button4.whenPressed(new LiftToSpecificHeight(4));
+	button5.whenPressed(new LiftToSpecificHeight(5));
+	button6.whenPressed(new LiftToSpecificHeight(6));
+
 }

@@ -20,6 +20,13 @@ public class Robot extends TimedRobot {
   //Command m_autonomousCommand;
   //SendableChooser<Command> m_chooser = new SendableChooser<>();
 
+  // static Compressor c;
+  // c.open();
+  // c.close();
+  // static Solenoid s;
+  // s.release();
+  // s.retract();
+
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -28,7 +35,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     driveTrain = new DriveTrain();
     teleopDrive = new TeleopDrive();
-    driveMode = 1;// 1 for tank drive, 2 for arcade drive.
+    driveMode = 2;// 1 for tank drive, 2 for arcade drive.
     //m_chooser.setDefaultOption("Default Auto", new ExampleCommand());
     // chooser.addOption("My Auto", new MyAutoCommand());
     //SmartDashboard.putData("Auto mode", m_chooser);

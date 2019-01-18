@@ -20,6 +20,9 @@ public class LiftToSpecificHeight extends Command {
   @Override
   protected void initialize() {
     /*switch (heightID) {
+      case 0:
+       
+        break;
       case 1:
         
         break;
@@ -38,10 +41,8 @@ public class LiftToSpecificHeight extends Command {
       case 6:
        
         break;
-      case 7:
-       
-        break;
       default:
+
         break;
     }*/
   }
