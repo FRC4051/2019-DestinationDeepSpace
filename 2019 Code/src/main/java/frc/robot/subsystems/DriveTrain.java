@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.*;
+import edu.wpi.first. wpilibj.GenericHID.Hand;
 
 /**
  * Drive train subsystem for the robot.
@@ -21,7 +22,7 @@ public class DriveTrain extends Subsystem {
   }
 
   public void enableArcadeDrive(){
-    driveControl.arcadeDrive(Robot.oi.leftStick.getY(), Robot.oi.leftStick.getX());
+    driveControl.arcadeDrive(Robot.oi.mainController.getY(Hand.kLeft), Robot.oi.mainController.getX(Hand.kRight));
   }
 
   @Override

@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.command.*;
 import frc.robot.subsystems.*;
 import frc.robot.commands.*;
+import edu.wpi.first. wpilibj.GenericHID.Hand;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -52,8 +53,8 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
 
-    oi.hatchButton.whenPressed(new ActivateHatchPlacer());
-    oi.hatchButton.whenReleased(new RetractHatchPlacer());
+    if(oi.mainController.getAButtonPressed())new ActivateHatchPlacer().start();
+    if(oi.mainController.getAButtonReleased())new RetractHatchPlacer().start();
 
   }
 

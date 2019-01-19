@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.robot.commands.*;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 /**
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
@@ -38,14 +39,14 @@ public class OI {
   // until it is finished as determined by it's isFinished method.
   // button.whenReleased(new ExampleCommand());
 
-  public static Joystick leftStick = new Joystick(0);
+  //public static Joystick leftStick = new Joystick(0);
   //public static Joystick rightStick = new Joystick(1);
 
-  public static JoystickButton hatchButton = new JoystickButton(leftStick, 1);
+  //public static JoystickButton hatchButton = new JoystickButton(leftStick, 1);
 
-  public OI(){
-   
-  }
+  public static XboxController mainController = new XboxController(0);
+
+
   // public static JoystickButton 
   // button1 = new JoystickButton(leftStick, 6),
   // button2 = new JoystickButton(leftStick, 7),
