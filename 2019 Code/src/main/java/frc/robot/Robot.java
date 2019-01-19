@@ -52,9 +52,16 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-
-    if(oi.mainController.getAButtonPressed())new ActivateHatchPlacer().start();
-    if(oi.mainController.getAButtonReleased())new RetractHatchPlacer().start();
+    if(oi.mainController.getAButtonPressed()){
+      ActivateHatchPlacer a = new ActivateHatchPlacer();
+      a.start();
+      System.out.println("test message");
+    }
+    if(oi.mainController.getAButtonReleased()){
+      RetractHatchPlacer r = new RetractHatchPlacer();
+      r.start();
+      System.out.println("test message");
+    }
 
   }
 
