@@ -3,8 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import frc.robot.RobotMap;
-import frc.robot.OI;
+import frc.robot.*;
 
 /**
  * Drive train subsystem for the robot.
@@ -17,12 +16,12 @@ public class DriveTrain extends Subsystem {
   SpeedController rightDriveMotor = RobotMap.driveMotor2;
   DifferentialDrive driveControl = new DifferentialDrive(leftDriveMotor, rightDriveMotor); 
 
-  public void tankDrive(){
-    driveControl.tankDrive(OI.leftStick.getY(), OI.rightStick.getY()); 
+  public void enableTankDrive(){
+    //driveControl.tankDrive(Robot.oi.leftStick.getY(), Robot.oi.rightStick.getY()); 
   }
 
-  public void arcadeDrive(){
-    driveControl.arcadeDrive(OI.leftStick.getY(), OI.leftStick.getX());
+  public void enableArcadeDrive(){
+    driveControl.arcadeDrive(Robot.oi.leftStick.getY(), Robot.oi.leftStick.getX());
   }
 
   @Override

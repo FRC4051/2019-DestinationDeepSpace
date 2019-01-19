@@ -1,10 +1,9 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.*;
-import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.subsystems.DriveTrain;
-import frc.robot.commands.TeleopDrive;
-import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.command.*;
+import frc.robot.subsystems.*;
+import frc.robot.commands.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -15,17 +14,14 @@ import edu.wpi.first.wpilibj.command.Scheduler;
  */
 public class Robot extends TimedRobot {
   public static DriveTrain driveTrain;
-  public static int driveMode; 
+  public static HatchPlacer hatchPlacer;
   public static Command teleopDrive;
+  public static int driveMode; 
+  public static OI oi;
+
+  static Compressor compressor = new Compressor(0);
   //Command m_autonomousCommand;
   //SendableChooser<Command> m_chooser = new SendableChooser<>();
-
-  // static Compressor c;
-  // c.open();
-  // c.close();
-  // static Solenoid s;
-  // s.release();
-  // s.retract();
 
   /**
    * This function is run when the robot is first started up and should be
@@ -33,9 +29,13 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    oi = new OI();
     driveTrain = new DriveTrain();
+    hatchPlacer = new HatchPlacer();
     teleopDrive = new TeleopDrive();
+    compressor.setClosedLoopControl(true);
     driveMode = 2;// 1 for tank drive, 2 for arcade drive.
+
     //m_chooser.setDefaultOption("Default Auto", new ExampleCommand());
     // chooser.addOption("My Auto", new MyAutoCommand());
     //SmartDashboard.putData("Auto mode", m_chooser);
@@ -51,6 +51,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+
+    oi.hatchButton.whenPressed(new ActivateHatchPlacer());
+    oi.hatchButton.whenReleased(new RetractHatchPlacer());
+
   }
 
 
