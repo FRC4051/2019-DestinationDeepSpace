@@ -15,14 +15,31 @@ public class DriveTrain extends Subsystem {
 
   SpeedController leftDriveMotor = RobotMap.driveMotor1;
   SpeedController rightDriveMotor = RobotMap.driveMotor2;
-  DifferentialDrive driveControl = new DifferentialDrive(leftDriveMotor, rightDriveMotor); 
+  public DifferentialDrive driveControl = new DifferentialDrive(leftDriveMotor, rightDriveMotor); 
 
   public void enableTankDrive(){
     //driveControl.tankDrive(Robot.oi.leftStick.getY(), Robot.oi.rightStick.getY()); 
   }
 
   public void enableArcadeDrive(){
-    driveControl.arcadeDrive(Robot.oi.mainController.getY(Hand.kLeft), Robot.oi.mainController.getX(Hand.kRight));
+    if(Robot.oi.mainController.getAButton()){
+      double cumulativeLightValue = 0;
+      if(!Robot.digitalLS1.get()) cumulativeLightValue += 0.5;
+      if(!Robot.digitalLS2.get()) cumulativeLightValue += 0.5;
+      if(!Robot.digitalLS3.get()) cumulativeLightValue += 0;
+      if(!Robot.digitalLS4.get()) cumulativeLightValue += -0.5;
+      if(!Robot.digitalLS5.get()) cumulativeLightValue += -0.5;
+      if(!Robot.digitalLS1.get()) System.out.println("Over here!");
+      if(!Robot.digitalLS2.get()) System.out.println("Over here!");
+      if(!Robot.digitalLS3.get()) System.out.println("Over here!");
+      if(!Robot.digitalLS4.get()) System.out.println("Over here!");
+      if(!Robot.digitalLS5.get()) System.out.println("Over here!");
+
+      driveControl.arcadeDrive(-0.5, cumulativeLightValue);
+      System.out.println(cumulativeLightValue);
+    }else{
+      driveControl.arcadeDrive(Robot.oi.mainController.getY(Hand.kLeft)*0.5, Robot.oi.mainController.getX(Hand.kRight)*-0.5);
+    }
   }
 
   @Override

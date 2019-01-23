@@ -24,12 +24,24 @@ public class Robot extends TimedRobot {
   //Command m_autonomousCommand;
   //SendableChooser<Command> m_chooser = new SendableChooser<>();
 
+  public static DigitalInput 
+  digitalLS1,
+  digitalLS2,
+  digitalLS3,
+  digitalLS4,
+  digitalLS5;
+
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
    */
   @Override
   public void robotInit() {
+    digitalLS1 = new DigitalInput(5);
+    digitalLS2 = new DigitalInput(6);
+    digitalLS3 = new DigitalInput(7);
+    digitalLS4 = new DigitalInput(8);
+    digitalLS5 = new DigitalInput(9);
     oi = new OI();
     driveTrain = new DriveTrain();
     hatchPlacer = new HatchPlacer();
@@ -52,17 +64,15 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    if(oi.mainController.getAButtonPressed()){
+    if(oi.mainController.getYButtonPressed()){
       ActivateHatchPlacer a = new ActivateHatchPlacer();
       a.start();
-      System.out.println("test message");
     }
-    if(oi.mainController.getAButtonReleased()){
+    if(oi.mainController.getYButtonReleased()){
       RetractHatchPlacer r = new RetractHatchPlacer();
       r.start();
-      System.out.println("test message");
     }
-
+    
   }
 
 
