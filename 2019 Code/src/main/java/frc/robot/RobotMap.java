@@ -12,5 +12,6 @@ public class RobotMap {
 
   public static Talon driveMotor1 = new Talon(0);
   public static Talon driveMotor2 = new Talon(1);
+  public static Talon liftMotor = new Talon(2);
   public static DoubleSolenoid solenoid1 = new DoubleSolenoid(1,2);
 }

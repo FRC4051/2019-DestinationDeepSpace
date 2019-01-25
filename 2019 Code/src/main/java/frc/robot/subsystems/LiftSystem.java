@@ -15,10 +15,18 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class LiftSystem extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-
+  SpeedController liftMotor = RobotMap.liftMotor;
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
+  }
+
+  public void moveUp() {
+    //will move giraffe up
+  }
+
+  public void moveDown() {
+    //will move giraffe down
   }
 }
