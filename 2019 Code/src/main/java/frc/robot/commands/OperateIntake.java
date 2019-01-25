@@ -1,49 +1,23 @@
+/*----------------------------------------------------------------------------*/
+/* Copyright (c) 2018 FIRST. All Rights Reserved.                             */
+/* Open Source Software - may be modified and shared by FRC teams. The code   */
+/* must be accompanied by the FIRST BSD license file in the root directory of */
+/* the project.                                                               */
+/*----------------------------------------------------------------------------*/
 
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class LiftToSpecificHeight extends Command {
-
-  // static int heightID;
-  // static Encoder liftEncoder;
-
-  public LiftToSpecificHeight(/*int _heightID*/) {
-  
-  //  heightID = _heightID;
-  //  liftEncoder = new Encoder(/* *//);
-
+public class OperateIntake extends Command {
+  public OperateIntake() {
+    // Use requires() here to declare subsystem dependencies
+    // eg. requires(chassis);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    /*switch (heightID) {
-      case 0:
-       
-        break;
-      case 1:
-        
-        break;
-      case 2:
-        
-        break;
-      case 3:
-        
-        break;
-      case 4:
-       
-        break;
-      case 5:
-       
-        break;
-      case 6:
-       
-        break;
-      default:
-
-        break;
-    }*/
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -54,7 +28,7 @@ public class LiftToSpecificHeight extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return (/*Encoder reads that the lift is at the right height.*/false);
+    return false;
   }
 
   // Called once after isFinished returns true
