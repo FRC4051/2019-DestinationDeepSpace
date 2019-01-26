@@ -46,12 +46,12 @@ public class OI {
 
   public XboxController mainController = new XboxController(0);
 
-  // public DigitalInput 
-  // digitalLS1 = new DigitalInput(5),
-  // digitalLS2 = new DigitalInput(6),
-  // digitalLS3 = new DigitalInput(7),
-  // digitalLS4 = new DigitalInput(8),
-  // digitalLS5 = new DigitalInput(9);
+  public DigitalInput 
+  digitalLS1 = new DigitalInput(5),
+  digitalLS2 = new DigitalInput(6),
+  digitalLS3 = new DigitalInput(7),
+  digitalLS4 = new DigitalInput(8),
+  digitalLS5 = new DigitalInput(9);
 
 
   // public static JoystickButton 

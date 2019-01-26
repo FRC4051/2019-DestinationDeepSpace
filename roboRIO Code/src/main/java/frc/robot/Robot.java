@@ -1,10 +1,17 @@
 package frc.robot;
 
+import java.util.*;
+
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.command.*;
+import edu.wpi.first. wpilibj.GenericHID.Hand;
+
 import frc.robot.subsystems.*;
 import frc.robot.commands.*;
-import edu.wpi.first. wpilibj.GenericHID.Hand;
+
+import frc2019grip.*;
+
+import org.opencv.core.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -19,18 +26,12 @@ public class Robot extends TimedRobot {
   public static Command teleopDrive;
   public static int driveMode; 
   public static OI oi;
-  static GripPipeline vision;
+  
+  private static GripPipeline vision;
 
   static Compressor compressor = new Compressor(0);
   //Command m_autonomousCommand;
   //SendableChooser<Command> m_chooser = new SendableChooser<>();
-
-  public static DigitalInput 
-  digitalLS1,
-  digitalLS2,
-  digitalLS3,
-  digitalLS4,
-  digitalLS5;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -38,17 +39,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    digitalLS1 = new DigitalInput(5);
-    digitalLS2 = new DigitalInput(6);
-    digitalLS3 = new DigitalInput(7);
-    digitalLS4 = new DigitalInput(8);
-    digitalLS5 = new DigitalInput(9);
     oi = new OI();
     driveTrain = new DriveTrain();
     hatchPlacer = new HatchPlacer();
     teleopDrive = new TeleopDrive();
 
-    vision.process();
+    vision.process(/* Camera stream *//);// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     compressor.setClosedLoopControl(true);
     driveMode = 2;// 1 for tank drive, 2 for arcade drive.
 
@@ -77,7 +73,7 @@ public class Robot extends TimedRobot {
     }
 
     ArrayList<MatOfPoint> contours = vision.filterContoursOutput();
-    //^need to broadcast <contours> to dashboard network tables^
+    //^need to broadcast <contours> to dashboard network tables^   <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
   }
 
 
