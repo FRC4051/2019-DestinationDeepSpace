@@ -19,6 +19,7 @@ public class Robot extends TimedRobot {
   public static Command teleopDrive;
   public static int driveMode; 
   public static OI oi;
+  static GripPipeline vision;
 
   static Compressor compressor = new Compressor(0);
   //Command m_autonomousCommand;
@@ -46,6 +47,8 @@ public class Robot extends TimedRobot {
     driveTrain = new DriveTrain();
     hatchPlacer = new HatchPlacer();
     teleopDrive = new TeleopDrive();
+
+    vision.process();
     compressor.setClosedLoopControl(true);
     driveMode = 2;// 1 for tank drive, 2 for arcade drive.
 
@@ -72,7 +75,9 @@ public class Robot extends TimedRobot {
       RetractHatchPlacer r = new RetractHatchPlacer();
       r.start();
     }
-    
+
+    ArrayList<MatOfPoint> contours = vision.filterContoursOutput();
+    //^need to broadcast <contours> to dashboard network tables^
   }
 
 
