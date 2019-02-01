@@ -22,7 +22,11 @@ public class DriveTrain extends Subsystem {
   }
 
   public void enableArcadeDrive(){
-    driveControl.arcadeDrive(Robot.oi.mainController.getY(Hand.kLeft), Robot.oi.mainController.getX(Hand.kRight));
+    if(!Robot.oi.mainController.getAButton()){
+      driveControl.arcadeDrive(Robot.oi.mainController.getY(Hand.kLeft), Robot.oi.mainController.getX(Hand.kRight));
+    }else if (Robot.rectArea < 10000) {
+      driveControl.arcadeDrive(-0.5, 0);
+    }
   }
 
   @Override

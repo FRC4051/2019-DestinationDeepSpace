@@ -2,9 +2,11 @@ package frc.robot;
 
 import java.util.*;
 
+import edu.wpi.first.wpilibj.smartdashboard.*;
 import edu.wpi.first.wpilibj.*;
+import edu.wpi.cscore.*;
 import edu.wpi.first.wpilibj.command.*;
-import edu.wpi.first. wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 import frc.robot.subsystems.*;
 import frc.robot.commands.*;
@@ -12,6 +14,11 @@ import frc.robot.commands.*;
 import frc2019grip.*;
 
 import org.opencv.core.*;
+import org.opencv.imgproc.*;
+import edu.wpi.first.wpilibj.vision.VisionRunner;
+import edu.wpi.first.wpilibj.vision.VisionThread;
+import org.opencv.core.Rect;
+import org.opencv.imgproc.Imgproc;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -26,10 +33,18 @@ public class Robot extends TimedRobot {
   public static Command teleopDrive;
   public static int driveMode; 
   public static OI oi;
-  
-  private static GripPipeline vision;
+
+  private static final int IMG_WIDTH = 640;
+	private static final int IMG_HEIGHT = 480;
+	
+  private VisionThread visionThread;
+  private final Object imgLock = new Object();
+  public static long rectArea;
+  public static long rectArea2;
 
   static Compressor compressor = new Compressor(0);
+  static UsbCamera cam;
+
   //Command m_autonomousCommand;
   //SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -44,10 +59,47 @@ public class Robot extends TimedRobot {
     hatchPlacer = new HatchPlacer();
     teleopDrive = new TeleopDrive();
 
-    vision.process(/* Camera stream *//);// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    cam = CameraServer.getInstance().startAutomaticCapture();
+    CvSink cvSink = CameraServer.getInstance().getVideo();
+    CvSource outputStream = CameraServer.getInstance().putVideo("Detected", IMG_WIDTH, IMG_HEIGHT);
+    cam.setResolution(IMG_WIDTH, IMG_HEIGHT);
+    cam.setBrightness(50);
+    Mat source = new Mat();
+    Mat output = new Mat();
+    visionThread = new VisionThread(cam, new GripPipeline(), pipeline -> {
+      cvSink.grabFrame(source);
+      Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2RGB);
+      ArrayList<MatOfPoint> contours = pipeline.filterContoursOutput();
+      if (!contours.isEmpty()) {
+          //SmartDashboard.putNumber("Contour Area", (r.width * r.height));
+          for(int i = 0; i < contours.size(); i++){
+            Rect r = Imgproc.boundingRect(contours.get(i));
+            Imgproc.rectangle(output,
+              new Point(r.x, r.y),
+              new Point(r.x + r.width, r.y + r.height),
+              new Scalar(0, 0, 255),
+              5
+            );
+          }
+          synchronized (imgLock) {
+            Rect r2 = Imgproc.boundingRect(contours.get(0));
+            rectArea = r2.width * r2.height;
+            SmartDashboard.putNumber("rectArea 1", rectArea);
+
+            if(contours.size()>1) {
+              Rect r3 = Imgproc.boundingRect(contours.get(1));
+              rectArea2 = r3.width * r3.height;
+              SmartDashboard.putNumber("rectArea 2", rectArea2);
+            }
+          }
+      }
+      outputStream.putFrame(output);
+    });
+    visionThread.start();
+
+
     compressor.setClosedLoopControl(true);
     driveMode = 2;// 1 for tank drive, 2 for arcade drive.
-
     //m_chooser.setDefaultOption("Default Auto", new ExampleCommand());
     // chooser.addOption("My Auto", new MyAutoCommand());
     //SmartDashboard.putData("Auto mode", m_chooser);
@@ -71,9 +123,6 @@ public class Robot extends TimedRobot {
       RetractHatchPlacer r = new RetractHatchPlacer();
       r.start();
     }
-
-    ArrayList<MatOfPoint> contours = vision.filterContoursOutput();
-    //^need to broadcast <contours> to dashboard network tables^   <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
   }
 
 

@@ -16,6 +16,8 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.*;	
 import org.opencv.objdetect.*;
 
+import edu.wpi.first.wpilibj.vision.VisionPipeline;
+
 /**
 * GripPipeline class.
 *
@@ -23,7 +25,7 @@ import org.opencv.objdetect.*;
 *
 * @author GRIP
 */
-public class GripPipeline {
+public class GripPipeline implements VisionPipeline {
 
 	//Outputs
 	private Mat resizeImageOutput = new Mat();
@@ -60,7 +62,7 @@ public class GripPipeline {
 
 		// Step Filter_Contours0:
 		ArrayList<MatOfPoint> filterContoursContours = findContoursOutput;
-		double filterContoursMinArea = 1000.0;
+		double filterContoursMinArea = 100.0;
 		double filterContoursMinPerimeter = 0.0;
 		double filterContoursMinWidth = 0.0;
 		double filterContoursMaxWidth = 1000.0;
@@ -70,7 +72,7 @@ public class GripPipeline {
 		double filterContoursMaxVertices = 1000000.0;
 		double filterContoursMinVertices = 0.0;
 		double filterContoursMinRatio = 0.2;
-		double filterContoursMaxRatio = 1.1;
+		double filterContoursMaxRatio = 1.5;
 		filterContours(filterContoursContours, filterContoursMinArea, filterContoursMinPerimeter, filterContoursMinWidth, filterContoursMaxWidth, filterContoursMinHeight, filterContoursMaxHeight, filterContoursSolidity, filterContoursMaxVertices, filterContoursMinVertices, filterContoursMinRatio, filterContoursMaxRatio, filterContoursOutput);
 
 	}
@@ -189,7 +191,7 @@ public class GripPipeline {
 			if (bb.width < minWidth || bb.width > maxWidth) continue;
 			if (bb.height < minHeight || bb.height > maxHeight) continue;
 			final double area = Imgproc.contourArea(contour);
-			if (area < minArea) continue;
+			if (area < minArea || area > 20000) continue;
 			if (Imgproc.arcLength(new MatOfPoint2f(contour.toArray()), true) < minPerimeter) continue;
 			Imgproc.convexHull(contour, hull);
 			MatOfPoint mopHull = new MatOfPoint();
