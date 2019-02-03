@@ -21,17 +21,21 @@ public class Intake extends Subsystem {
 
   //sets motors to direction -1 (going in) and pulls in the ball for a set amount of time
   public void pullInBall(){
-    if(Robot.oi.mainController.getBButton()){
-      leftIntakeMotor.set(1.0);
-      rightIntakeMotor.set(-1.0);
-    }
+    // Pull in ball. 
+    leftIntakeMotor.set(0.45);
+    rightIntakeMotor.set(-0.45);
   }
 
   public void yeetOutBall(){
-    if(Robot.oi.mainController.getBButton()){
-      leftIntakeMotor.set(-1.0);
-      rightIntakeMotor.set(1.0);
-    }
+    // Launch out ball.
+    leftIntakeMotor.set(-1.0);
+    rightIntakeMotor.set(1.0);
+  }
+
+  public void setIdle(){
+    // Idle.
+    leftIntakeMotor.set(0);
+    rightIntakeMotor.set(0);
   }
 
   @Override

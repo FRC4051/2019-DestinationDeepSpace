@@ -9,6 +9,8 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 
+import frc.robot.Robot;
+
 public class OperateIntake extends Command {
   public OperateIntake() {
     // Use requires() here to declare subsystem dependencies
@@ -23,6 +25,13 @@ public class OperateIntake extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    if(Robot.oi.mainController.getAButton()){
+      Robot.intake.pullInBall();
+    }else if(Robot.oi.mainController.getBButton()){
+      Robot.intake.yeetOutBall();
+    }else{
+      Robot.intake.setIdle();
+    }
   }
 
   // Make this return true when this Command no longer needs to run execute()

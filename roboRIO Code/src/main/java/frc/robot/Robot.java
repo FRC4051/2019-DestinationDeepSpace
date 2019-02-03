@@ -18,10 +18,8 @@ import org.opencv.imgproc.*;
 import edu.wpi.first.wpilibj.vision.VisionRunner;
 import edu.wpi.first.wpilibj.vision.VisionThread;
 import org.opencv.core.Rect;
-import org.opencv.imgproc.Imgproc;
 
-/**
- * The VM is configured to automatically run this class, and to call the
+/** ss, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
  * documentation. If you change the name of this class or the package after
  * creating this project, you must also update the build.gradle file in the
@@ -30,7 +28,9 @@ import org.opencv.imgproc.Imgproc;
 public class Robot extends TimedRobot {
   public static DriveTrain driveTrain;
   public static HatchPlacer hatchPlacer;
+  public static Intake intake;
   public static Command teleopDrive;
+  public static Command operateIntake;
   public static int driveMode; 
   public static OI oi;
 
@@ -57,6 +57,8 @@ public class Robot extends TimedRobot {
     oi = new OI();
     driveTrain = new DriveTrain();
     hatchPlacer = new HatchPlacer();
+    intake = new Intake();
+    operateIntake = new OperateIntake();
     teleopDrive = new TeleopDrive();
 
     cam = CameraServer.getInstance().startAutomaticCapture();
@@ -123,6 +125,7 @@ public class Robot extends TimedRobot {
       RetractHatchPlacer r = new RetractHatchPlacer();
       r.start();
     }
+
   }
 
 
