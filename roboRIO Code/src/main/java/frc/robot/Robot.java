@@ -117,6 +117,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    // For Xbox controllers
     if(oi.mainController.getYButtonPressed()){
       ActivateHatchPlacer a = new ActivateHatchPlacer();
       a.start();
@@ -125,7 +126,9 @@ public class Robot extends TimedRobot {
       RetractHatchPlacer r = new RetractHatchPlacer();
       r.start();
     }
-
+    // For joysticks
+    oi.hatchButton.whenPressed(new ActivateHatchPlacer());
+    oi.hatchButton.whenReleased(new RetractHatchPlacer());
   }
 
 
