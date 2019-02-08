@@ -16,8 +16,8 @@ import frc.robot.*;
 public class Intake extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-  SpeedController leftIntakeMotor = RobotMap.intakeMotor1;
-  SpeedController rightIntakeMotor = RobotMap.intakeMotor2;
+  static SpeedController leftIntakeMotor = RobotMap.intakeMotor1;
+  static SpeedController rightIntakeMotor = RobotMap.intakeMotor2;
 
   //sets motors to direction -1 (going in) and pulls in the ball for a set amount of time
   public void pullInBall(){

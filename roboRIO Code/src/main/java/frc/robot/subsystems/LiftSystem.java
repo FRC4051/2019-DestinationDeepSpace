@@ -17,7 +17,7 @@ import frc.robot.*;
 public class LiftSystem extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-  SpeedController liftMotor = RobotMap.liftMotor;
+  static SpeedController liftMotor = RobotMap.liftMotor;
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
