@@ -29,8 +29,10 @@ public class Robot extends TimedRobot {
   public static DriveTrain driveTrain;
   public static HatchPlacer hatchPlacer;
   public static Intake intake;
+  public static LiftSystem liftSystem;
   public static Command teleopDrive;
   public static Command operateIntake;
+  public static Command liftToSpecificHeight;
   public static int driveMode; 
   public static OI oi;
 
@@ -60,6 +62,7 @@ public class Robot extends TimedRobot {
     intake = new Intake();
     operateIntake = new OperateIntake();
     teleopDrive = new TeleopDrive();
+    liftSystem = new LiftSystem();
 
     cam = CameraServer.getInstance().startAutomaticCapture();
     CvSink cvSink = CameraServer.getInstance().getVideo();

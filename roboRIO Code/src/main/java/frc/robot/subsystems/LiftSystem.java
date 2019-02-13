@@ -17,7 +17,15 @@ import frc.robot.*;
 public class LiftSystem extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
+  static DigitalInput limitSwitch = RobotMap.limitSwitch1;
   static SpeedController liftMotor = RobotMap.liftMotor;
+  
+  public LiftSystem(){
+    while(!limitSwitch.get()){
+      liftMotor.set(-1);
+    }
+  }
+
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
@@ -26,9 +34,17 @@ public class LiftSystem extends Subsystem {
 
   public void moveUp() {
     //will move giraffe up
+    liftMotor.set(1);
   }
 
   public void moveDown() {
     //will move giraffe down
+    liftMotor.set(-1);
+  }
+  public void reset(){
+    // will reset lift system to proper initial position
+    while(!limitSwitch.get()){
+      liftMotor.set(-1);
+    }
   }
 }
