@@ -30,6 +30,7 @@ public class Robot extends TimedRobot {
   public static HatchPlacer hatchPlacer;
   public static Intake intake;
   public static LiftSystem liftSystem;
+  public static RaiseTheRobot raiseTheRobot;
   public static Command teleopDrive;
   public static Command operateIntake;
   public static Command liftToSpecificHeight;
@@ -60,6 +61,7 @@ public class Robot extends TimedRobot {
     driveTrain = new DriveTrain();
     hatchPlacer = new HatchPlacer();
     intake = new Intake();
+    raiseTheRobot = new RaiseTheRobot();
     operateIntake = new OperateIntake();
     teleopDrive = new TeleopDrive();
     liftSystem = new LiftSystem();
