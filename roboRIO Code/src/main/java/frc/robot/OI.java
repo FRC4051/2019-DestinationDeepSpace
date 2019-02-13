@@ -64,11 +64,14 @@ public class OI {
   // button5 = new JoystickButton(leftStick, 10),
   // button6 = new JoystickButton(leftStick, 11);
 
-  // button1.whenPressed(new LiftToSpecificHeight(1));
-	// button2.whenPressed(new LiftToSpecificHeight(2));
-	// button3.whenPressed(new LiftToSpecificHeight(3));
-	// button4.whenPressed(new LiftToSpecificHeight(4));
-	// button5.whenPressed(new LiftToSpecificHeight(5));
-	// button6.whenPressed(new LiftToSpecificHeight(6));
-
+  public OI(){
+    while(true){
+      button1.whenPressed(new LiftToSpecificHeight(1));
+      button2.whenPressed(new LiftToSpecificHeight(2));
+      button3.whenPressed(new LiftToSpecificHeight(3));
+      button4.whenPressed(new LiftToSpecificHeight(4));
+      button5.whenPressed(new LiftToSpecificHeight(5));
+      button6.whenPressed(new LiftToSpecificHeight(6));
+    }
+  }
 }

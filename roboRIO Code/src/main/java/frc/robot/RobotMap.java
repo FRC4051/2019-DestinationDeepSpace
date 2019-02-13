@@ -20,4 +20,5 @@ public class RobotMap {
   public static DoubleSolenoid solenoid3 = new DoubleSolenoid(4,5);
   public static DoubleSolenoid solenoid4 = new DoubleSolenoid(6,7);
   public static DoubleSolenoid solenoid5 = new DoubleSolenoid(8,9);
+  public static DigitalInput limitSwitch1 = new DigitalInput(0);
 }
