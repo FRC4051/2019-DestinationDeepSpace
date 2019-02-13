@@ -3,6 +3,8 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 
+import frc.robot.*;
+
 public class LiftToSpecificHeight extends Command {
 
   static int heightID;
@@ -11,6 +13,7 @@ public class LiftToSpecificHeight extends Command {
 
   public LiftToSpecificHeight(int _heightID) {
     heightID = _heightID;
+    Robot.liftSystem._LiftMotor;
     //liftEncoder = new Encoder(/*Encoder Port*/);
 
   }

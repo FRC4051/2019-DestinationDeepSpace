@@ -10,7 +10,8 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.*;
-
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.*;
 /**
  * Add your docs here.
  */
@@ -18,12 +19,15 @@ public class LiftSystem extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
   static DigitalInput limitSwitch = RobotMap.limitSwitch1;
-  static SpeedController liftMotor = RobotMap.liftMotor;
-  
+  static TalonSRX liftMotor = RobotMap.liftMotor;
+  public TalonSRX _LiftMotor = liftMotor;
+
   public LiftSystem(){
+    liftMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);// Do not change parameters.
     while(!limitSwitch.get()){
-      liftMotor.set(-1);
+      liftMotor.set(ControlMode.PercentOutput, -1);
     }
+    liftMotor.set(ControlMode.PercentOutput, -1);
   }
 
   @Override
@@ -34,17 +38,18 @@ public class LiftSystem extends Subsystem {
 
   public void moveUp() {
     //will move giraffe up
-    liftMotor.set(1);
+    liftMotor.set(ControlMode.PercentOutput, 1);
   }
 
   public void moveDown() {
     //will move giraffe down
-    liftMotor.set(-1);
+    liftMotor.set(ControlMode.PercentOutput, -1);
   }
   public void reset(){
     // will reset lift system to proper initial position
     while(!limitSwitch.get()){
-      liftMotor.set(-1);
+      liftMotor.set(ControlMode.PercentOutput, -1);
     }
+    liftMotor.set(ControlMode.PercentOutput, 0);
   }
 }

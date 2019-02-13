@@ -46,23 +46,20 @@ public class OI {
 
   public XboxController mainController = new XboxController(0);
 
-  public DigitalInput 
-  digitalLS1 = new DigitalInput(5),
-  digitalLS2 = new DigitalInput(6),
-  digitalLS3 = new DigitalInput(7),
-  digitalLS4 = new DigitalInput(8),
-  digitalLS5 = new DigitalInput(9);
+  // public DigitalInput 
+  // digitalLS1 = new DigitalInput(5),
+  // digitalLS2 = new DigitalInput(6),
+  // digitalLS3 = new DigitalInput(7),
+  // digitalLS4 = new DigitalInput(8),
+  // digitalLS5 = new DigitalInput(9);
 
-
-
-
-  // public JoystickButton 
-  // button1 = new JoystickButton(leftStick, 6),
-  // button2 = new JoystickButton(leftStick, 7),
-  // button3 = new JoystickButton(leftStick, 8),
-  // button4 = new JoystickButton(leftStick, 9),
-  // button5 = new JoystickButton(leftStick, 10),
-  // button6 = new JoystickButton(leftStick, 11);
+  public JoystickButton 
+  button1 = new JoystickButton(leftStick, 6),
+  button2 = new JoystickButton(leftStick, 7),
+  button3 = new JoystickButton(leftStick, 8),
+  button4 = new JoystickButton(leftStick, 9),
+  button5 = new JoystickButton(leftStick, 10),
+  button6 = new JoystickButton(leftStick, 11);
 
   public OI(){
     while(true){

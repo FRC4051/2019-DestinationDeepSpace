@@ -13,8 +13,8 @@ public class DriveTrain extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  static SpeedController leftDriveMotor = RobotMap.driveMotor1;
-  static SpeedController rightDriveMotor = RobotMap.driveMotor2;
+  static Talon leftDriveMotor = RobotMap.driveMotor1;
+  static Talon rightDriveMotor = RobotMap.driveMotor2;
   DifferentialDrive driveControl = new DifferentialDrive(leftDriveMotor, rightDriveMotor); 
 
   public void enableTankDrive(){
