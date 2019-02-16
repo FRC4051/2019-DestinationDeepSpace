@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -13,20 +16,16 @@ public class DriveTrain extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  static Talon leftDriveMotor = RobotMap.driveMotor1;
-  static Talon rightDriveMotor = RobotMap.driveMotor2;
-  DifferentialDrive driveControl = new DifferentialDrive(leftDriveMotor, rightDriveMotor); 
+  static VictorSPX leftDriveMotor = RobotMap.driveMotor1;
+  static VictorSPX rightDriveMotor = RobotMap.driveMotor2;
 
   public void enableTankDrive(){
     //driveControl.tankDrive(Robot.oi.leftStick.getY(), Robot.oi.rightStick.getY()); 
   }
 
   public void enableArcadeDrive(){
-    if(!Robot.oi.mainController.getAButton()){
-      driveControl.arcadeDrive(Robot.oi.mainController.getY(Hand.kLeft), Robot.oi.mainController.getX(Hand.kRight));
-    }else if (Robot.rectArea < 10000) {
-      driveControl.arcadeDrive(-0.5, 0);
-    }
+    leftDriveMotor.set(ControlMode.PercentOutput, Robot.oi.mainController.getY(Hand.kLeft));
+    rightDriveMotor.set(ControlMode.PercentOutput, Robot.oi.mainController.getY(Hand.kRight));
   }
 
   @Override

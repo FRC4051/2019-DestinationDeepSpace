@@ -11,8 +11,6 @@ public class HatchPlacer extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  static DoubleSolenoid mushroom = RobotMap.solenoid1;
-
   //example boi
   static DoubleSolenoid linearSolenoid = RobotMap.solenoid1;
 

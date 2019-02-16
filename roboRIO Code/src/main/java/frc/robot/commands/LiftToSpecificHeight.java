@@ -4,6 +4,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 
 import frc.robot.*;
+import frc.robot.subsystems.LiftSystem;
 
 public class LiftToSpecificHeight extends Command {
 
@@ -13,7 +14,6 @@ public class LiftToSpecificHeight extends Command {
 
   public LiftToSpecificHeight(int _heightID) {
     heightID = _heightID;
-    //Robot.liftSystem._LiftMotor.setFeedbackDevice();
     //liftEncoder = new Encoder(/*Encoder Port*/);
 
   }
@@ -23,25 +23,25 @@ public class LiftToSpecificHeight extends Command {
   protected void initialize() {
     switch (heightID) {
       case 0:
-        height = 1000;
+        height = 0;
         break;
       case 1:
-        height = 2000;
-        break;
-      case 2:
-        height = 3000;
-        break;
-      case 3:
         height = 4000;
         break;
+      case 2:
+        height = 8000;
+        break;
+      case 3:
+        height = 12000;
+        break;
       case 4:
-        height = 5000;
+        height = 16000;
         break;
       case 5:
-        height = 6000;
+        height = 20000;
         break;
       case 6:
-        height = 7000;
+        height = 24000;
         break;
       default:
         // If this happens then the command is referencing a height that doesn't exist.
@@ -52,6 +52,13 @@ public class LiftToSpecificHeight extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    if(height > LiftSystem.liftMotor.getSensorCollection().getQuadraturePosition()){
+      Robot.liftSystem.moveUp();
+    }else if(height < LiftSystem.liftMotor.getSensorCollection().getQuadraturePosition()){
+      Robot.liftSystem.moveDown();
+    }else{
+      Robot.liftSystem.reset();
+    }
   }
 
   // Make this return true when this Command no longer needs to run execute()

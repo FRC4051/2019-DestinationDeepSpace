@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import frc.robot.subsystems.*;
 import frc.robot.commands.*;
 
-import frc2019grip.*;
+//import frc2019grip.*;
 
 import org.opencv.core.*;
 import org.opencv.imgproc.*;
@@ -31,23 +31,20 @@ public class Robot extends TimedRobot {
   public static Intake intake;
   public static LiftSystem liftSystem;
   public static RaiseTheRobot raiseTheRobot;
-  public static Command standardLift;
-  public static Command teleopDrive;
-  public static Command operateIntake;
   public static Command liftToSpecificHeight;
-  public static int driveMode; 
+  public static int heightID;
   public static OI oi;
 
-  private static final int IMG_WIDTH = 640;
-	private static final int IMG_HEIGHT = 480;
+  // private static final int IMG_WIDTH = 640;
+	// private static final int IMG_HEIGHT = 480;
 	
-  private VisionThread visionThread;
-  private final Object imgLock = new Object();
-  public static long rectArea;
-  public static long rectArea2;
+  // private VisionThread visionThread;
+  // private final Object imgLock = new Object();
+  // public static long rectArea;
+  // public static long rectArea2;
 
   static Compressor compressor = new Compressor(0);
-  static UsbCamera cam;
+  // static UsbCamera cam;
 
   //Command m_autonomousCommand;
   //SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -58,16 +55,14 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    heightID = 0;
     oi = new OI();
     driveTrain = new DriveTrain();
     hatchPlacer = new HatchPlacer();
     intake = new Intake();
     raiseTheRobot = new RaiseTheRobot();
-    operateIntake = new OperateIntake();
-    teleopDrive = new TeleopDrive();
     liftSystem = new LiftSystem();
-    standardLift = new StandardLift();
-    
+    /*
     cam = CameraServer.getInstance().startAutomaticCapture();
     CvSink cvSink = CameraServer.getInstance().getVideo();
     CvSource outputStream = CameraServer.getInstance().putVideo("Detected", IMG_WIDTH, IMG_HEIGHT);
@@ -105,10 +100,9 @@ public class Robot extends TimedRobot {
       outputStream.putFrame(output);
     });
     visionThread.start();
-
+    */
 
     compressor.setClosedLoopControl(true);
-    driveMode = 2;// 1 for tank drive, 2 for arcade drive.
     //m_chooser.setDefaultOption("Default Auto", new ExampleCommand());
     // chooser.addOption("My Auto", new MyAutoCommand());
     //SmartDashboard.putData("Auto mode", m_chooser);
@@ -124,7 +118,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    // For Xbox controllers
+    // Drive
+    Robot.driveTrain.enableArcadeDrive();
+    // Hatch placer
     if(oi.mainController.getYButtonPressed()){
       ActivateHatchPlacer a = new ActivateHatchPlacer();
       a.start();
@@ -133,9 +129,41 @@ public class Robot extends TimedRobot {
       RetractHatchPlacer r = new RetractHatchPlacer();
       r.start();
     }
+    
+    // Lift to specific height
+    if(oi.mainController.getPOV(0) == 0){
+      heightID++;
+      new LiftToSpecificHeight(heightID);
+    }else if(oi.mainController.getPOV(0) == 180){
+      heightID--;
+      new LiftToSpecificHeight(heightID);
+    }else // Normal lift
+    if(oi.mainController.getBumper(Hand.kLeft)){
+      liftSystem.moveDown();
+    }else if(oi.mainController.getBumper(Hand.kRight)){
+      liftSystem.moveUp();
+    }else{
+      liftSystem.reset();
+    }
+    // Intake
+    if(Robot.oi.mainController.getAButton()){
+      Robot.intake.pullInBall();
+    }else if(Robot.oi.mainController.getBButton()){
+      Robot.intake.yeetOutBall();
+    }else{
+      Robot.intake.setIdle();
+    }
+    // Reset encoder at home position to eliminate error
+    if(liftSystem.liftMotor.getSensorCollection().isRevLimitSwitchClosed()){
+      liftSystem.liftMotor.getSensorCollection().setQuadraturePosition(0, 500);
+    }
+    SmartDashboard.putNumber("Arm Encoder Position", liftSystem.liftMotor.getSensorCollection().getQuadraturePosition());
+    SmartDashboard.putNumber("Arm Encoder Velocity", liftSystem.liftMotor.getSensorCollection().getQuadratureVelocity());
+    SmartDashboard.putBoolean("Upper Arm Limit Switch", liftSystem.liftMotor.getSensorCollection().isFwdLimitSwitchClosed());
+    SmartDashboard.putBoolean("Lower Arm Limit Switch", liftSystem.liftMotor.getSensorCollection().isRevLimitSwitchClosed());
     // For joysticks
-    oi.hatchButton.whenPressed(new ActivateHatchPlacer());
-    oi.hatchButton.whenReleased(new RetractHatchPlacer());
+    // oi.hatchButton.whenPressed(new ActivateHatchPlacer());
+    // oi.hatchButton.whenReleased(new RetractHatchPlacer());
   }
 
 
@@ -184,7 +212,6 @@ public class Robot extends TimedRobot {
     //if (m_autonomousCommand != null) {
       //m_autonomousCommand.cancel();
     //}
-    teleopDrive.start();
   }
 
   /**

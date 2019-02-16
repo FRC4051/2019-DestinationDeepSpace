@@ -18,17 +18,14 @@ import com.ctre.phoenix.motorcontrol.*;
 public class LiftSystem extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-  static DigitalInput limitSwitch = RobotMap.limitSwitch1;
-  static TalonSRX liftMotor = RobotMap.liftMotor;
-  public TalonSRX _LiftMotor;
+  //static DigitalInput limitSwitch = RobotMap.limitSwitch1;
+  public static TalonSRX liftMotor = RobotMap.liftMotor;
 
   public LiftSystem(){
     liftMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);// Do not change parameters.
-    _LiftMotor = liftMotor;
-    while(!limitSwitch.get()){
-      liftMotor.set(ControlMode.PercentOutput, -1);
-    }
-    liftMotor.set(ControlMode.PercentOutput, -1);
+    // while(!limitSwitch.get()){
+    //   liftMotor.set(ControlMode.PercentOutput, -1);
+    // }
   }
 
   @Override
@@ -39,18 +36,19 @@ public class LiftSystem extends Subsystem {
 
   public void moveUp() {
     //will move giraffe up
-    liftMotor.set(ControlMode.PercentOutput, 1);
+    liftMotor.set(ControlMode.PercentOutput, 0.8);
   }
 
   public void moveDown() {
     //will move giraffe down
-    liftMotor.set(ControlMode.PercentOutput, -1);
+    liftMotor.set(ControlMode.PercentOutput, -0.8)
+    ;
   }
   public void reset(){
     // will reset lift system to proper initial position
-    while(!limitSwitch.get()){
-      liftMotor.set(ControlMode.PercentOutput, -1);
-    }
+    // while(!limitSwitch.get()){
+    //   liftMotor.set(ControlMode.PercentOutput, -0.25);
+    // }
     liftMotor.set(ControlMode.PercentOutput, 0);
   }
 }

@@ -39,10 +39,10 @@ public class OI {
   // until it is finished as determined by it's isFinished method.
   // button.whenReleased(new ExampleCommand());
 
-  public Joystick leftStick = new Joystick(0);
-  public Joystick rightStick = new Joystick(1);
+  // public Joystick leftStick = new Joystick(0);
+  // public Joystick rightStick = new Joystick(1);
 
-  public JoystickButton hatchButton = new JoystickButton(leftStick, 1);
+  //public JoystickButton hatchButton = new JoystickButton(leftStick, 1);
 
   public XboxController mainController = new XboxController(0);
 
@@ -53,22 +53,22 @@ public class OI {
   // digitalLS4 = new DigitalInput(8),
   // digitalLS5 = new DigitalInput(9);
 
-  public JoystickButton 
-  button1 = new JoystickButton(leftStick, 6),
-  button2 = new JoystickButton(leftStick, 7),
-  button3 = new JoystickButton(leftStick, 8),
-  button4 = new JoystickButton(leftStick, 9),
-  button5 = new JoystickButton(leftStick, 10),
-  button6 = new JoystickButton(leftStick, 11);
+  // public JoystickButton 
+  // button1 = new JoystickButton(leftStick, 6),
+  // button2 = new JoystickButton(leftStick, 7),
+  // button3 = new JoystickButton(leftStick, 8),
+  // button4 = new JoystickButton(leftStick, 9),
+  // button5 = new JoystickButton(leftStick, 10),
+  // button6 = new JoystickButton(leftStick, 11);
 
   public OI(){
-    while(true){
-      button1.whenPressed(new LiftToSpecificHeight(1));
-      button2.whenPressed(new LiftToSpecificHeight(2));
-      button3.whenPressed(new LiftToSpecificHeight(3));
-      button4.whenPressed(new LiftToSpecificHeight(4));
-      button5.whenPressed(new LiftToSpecificHeight(5));
-      button6.whenPressed(new LiftToSpecificHeight(6));
-    }
+    // while(true){
+    //   button1.whenPressed(new LiftToSpecificHeight(1));
+    //   button2.whenPressed(new LiftToSpecificHeight(2));
+    //   button3.whenPressed(new LiftToSpecificHeight(3));
+    //   button4.whenPressed(new LiftToSpecificHeight(4));
+    //   button5.whenPressed(new LiftToSpecificHeight(5));
+    //   button6.whenPressed(new LiftToSpecificHeight(6));
+    // }
   }
 }
