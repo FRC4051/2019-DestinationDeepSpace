@@ -31,6 +31,7 @@ public class Robot extends TimedRobot {
   public static Intake intake;
   public static LiftSystem liftSystem;
   public static RaiseTheRobot raiseTheRobot;
+  public static Command standardLift;
   public static Command teleopDrive;
   public static Command operateIntake;
   public static Command liftToSpecificHeight;
@@ -65,7 +66,8 @@ public class Robot extends TimedRobot {
     operateIntake = new OperateIntake();
     teleopDrive = new TeleopDrive();
     liftSystem = new LiftSystem();
-
+    standardLift = new StandardLift();
+    
     cam = CameraServer.getInstance().startAutomaticCapture();
     CvSink cvSink = CameraServer.getInstance().getVideo();
     CvSource outputStream = CameraServer.getInstance().putVideo("Detected", IMG_WIDTH, IMG_HEIGHT);
