@@ -20,10 +20,11 @@ public class LiftSystem extends Subsystem {
   // here. Call these from Commands.
   static DigitalInput limitSwitch = RobotMap.limitSwitch1;
   static TalonSRX liftMotor = RobotMap.liftMotor;
-  public TalonSRX _LiftMotor = liftMotor;
+  public TalonSRX _LiftMotor;
 
   public LiftSystem(){
     liftMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);// Do not change parameters.
+    _LiftMotor = liftMotor;
     while(!limitSwitch.get()){
       liftMotor.set(ControlMode.PercentOutput, -1);
     }
