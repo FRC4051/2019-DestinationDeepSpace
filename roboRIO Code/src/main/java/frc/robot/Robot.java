@@ -13,7 +13,7 @@ import frc.robot.commands.*;
 
 import com.ctre.phoenix.motorcontrol.*;
 
-//import frc2019grip.*;
+import frc.frc2019grip.*;
 
 import org.opencv.core.*;
 import org.opencv.imgproc.*;
@@ -40,16 +40,16 @@ public class Robot extends TimedRobot {
   static boolean heightIncReq = false;
   static boolean heightDecReq = false;
 
-  // private static final int IMG_WIDTH = 640;
-	// private static final int IMG_HEIGHT = 480;
+  private static final int IMG_WIDTH = 640;
+	private static final int IMG_HEIGHT = 480;
 	
-  // private VisionThread visionThread;
-  // private final Object imgLock = new Object();
-  // public static long rectArea;
-  // public static long rectArea2;
+  private VisionThread visionThread;
+  private final Object imgLock = new Object();
+  public static long rectArea;
+  public static long rectArea2;
 
   static Compressor compressor = new Compressor(0);
-  // static UsbCamera cam;
+  static UsbCamera cam;
 
   //Command m_autonomousCommand;
   //SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -70,7 +70,6 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putNumber("HeightID", heightID);
 
-    /*
     cam = CameraServer.getInstance().startAutomaticCapture();
     CvSink cvSink = CameraServer.getInstance().getVideo();
     CvSource outputStream = CameraServer.getInstance().putVideo("Detected", IMG_WIDTH, IMG_HEIGHT);
@@ -108,7 +107,7 @@ public class Robot extends TimedRobot {
       outputStream.putFrame(output);
     });
     visionThread.start();
-    */
+
 
     compressor.setClosedLoopControl(true);
     //m_chooser.setDefaultOption("Default Auto", new ExampleCommand());

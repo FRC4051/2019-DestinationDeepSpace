@@ -1,4 +1,4 @@
-package frc2019grip;
+package frc.frc2019grip;
 
 import java.io.File;
 import java.io.FileWriter;
