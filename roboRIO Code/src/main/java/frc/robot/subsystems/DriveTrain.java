@@ -19,11 +19,7 @@ public class DriveTrain extends Subsystem {
   static VictorSPX leftDriveMotor = RobotMap.driveMotor1;
   static VictorSPX rightDriveMotor = RobotMap.driveMotor2;
 
-  public void enableTankDrive(){
-    //driveControl.tankDrive(Robot.oi.leftStick.getY(), Robot.oi.rightStick.getY()); 
-  }
-
-  public void enableArcadeDrive(){
+  public void drive(){
     leftDriveMotor.set(ControlMode.PercentOutput, Robot.oi.mainController.getY(Hand.kLeft));
     rightDriveMotor.set(ControlMode.PercentOutput, Robot.oi.mainController.getY(Hand.kRight));
   }
