@@ -24,8 +24,8 @@ public class DriveTrain extends Subsystem {
   }
 
   public void enableArcadeDrive(){
-    leftDriveMotor.set(ControlMode.PercentOutput, Robot.oi.mainController.getY(Hand.kLeft));
-    rightDriveMotor.set(ControlMode.PercentOutput, Robot.oi.mainController.getY(Hand.kRight));
+    leftDriveMotor.set(ControlMode.PercentOutput, Robot.oi.mainController.getY(Hand.kLeft) * 0.5);
+    rightDriveMotor.set(ControlMode.PercentOutput, Robot.oi.mainController.getY(Hand.kRight) * 0.5);
   }
 
   @Override
