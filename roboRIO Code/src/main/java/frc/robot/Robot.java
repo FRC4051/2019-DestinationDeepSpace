@@ -155,15 +155,14 @@ public class Robot extends TimedRobot {
       Robot.intake.setIdle();
     }
     // Reset encoder at home position to eliminate error
-    SensorCollection liftSensors = liftSystem.liftMotor.getSensorCollection();
-    if(liftSensors.isRevLimitSwitchClosed()){
-      liftSensors.setQuadraturePosition(0, 500);
+    if(liftSystem.liftSensors.isRevLimitSwitchClosed()){
+      liftSystem.liftSensors.setQuadraturePosition(0, 500);
     }
     // Display on lift motor position & velocity on dashboard.
-    SmartDashboard.putNumber("Arm Encoder Position", liftSensors.getQuadraturePosition());
-    SmartDashboard.putNumber("Arm Encoder Velocity", liftSensors.getQuadratureVelocity());
-    SmartDashboard.putBoolean("Upper Arm Limit Switch", liftSensors.isFwdLimitSwitchClosed());
-    SmartDashboard.putBoolean("Lower Arm Limit Switch", liftSensors.isRevLimitSwitchClosed());
+    SmartDashboard.putNumber("Arm Encoder Position", liftSystem.liftSensors.getQuadraturePosition());
+    SmartDashboard.putNumber("Arm Encoder Velocity", liftSystem.liftSensors.getQuadratureVelocity());
+    SmartDashboard.putBoolean("Upper Arm Limit Switch", liftSystem.liftSensors.isFwdLimitSwitchClosed());
+    SmartDashboard.putBoolean("Lower Arm Limit Switch", liftSystem.liftSensors.isRevLimitSwitchClosed());
   }
 
 

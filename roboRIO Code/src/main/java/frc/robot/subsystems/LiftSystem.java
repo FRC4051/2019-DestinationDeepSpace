@@ -20,6 +20,8 @@ public class LiftSystem extends Subsystem {
   // here. Call these from Commands.
 
   public static TalonSRX liftMotor = RobotMap.liftMotor;
+  public static SensorCollection liftSensors = liftMotor.getSensorCollection();
+
 
   public LiftSystem(){
     // Encoder.
@@ -41,12 +43,14 @@ public class LiftSystem extends Subsystem {
 
   public void moveUp() {
     //will move giraffe up
-    liftMotor.set(ControlMode.PercentOutput, 0.8);
+    if(liftSensors.getQuadraturePosition() > 15000) liftMotor.set(ControlMode.PercentOutput, 0.5);
+    else liftMotor.set(ControlMode.PercentOutput, 1);
   }
 
   public void moveDown() {
     //will move giraffe down
-    liftMotor.set(ControlMode.PercentOutput, -0.8);
+    if(liftSensors.getQuadraturePosition() > 15000) liftMotor.set(ControlMode.PercentOutput, -0.5);
+    else liftMotor.set(ControlMode.PercentOutput, -1);
   }
   public void reset(){
     liftMotor.set(ControlMode.PercentOutput, 0);
