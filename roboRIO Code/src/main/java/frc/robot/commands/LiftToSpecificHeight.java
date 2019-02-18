@@ -52,7 +52,7 @@ public class LiftToSpecificHeight extends Command {
   protected void execute() {
     if(height > LiftSystem.liftSensors.getQuadraturePosition()){
       Robot.liftSystem.moveUp();
-    }else if(height < LiftSystem.liftSensors.zgetQuadraturePosition()){
+    }else if(height < LiftSystem.liftSensors.getQuadraturePosition()){
       Robot.liftSystem.moveDown();
     }else{
       Robot.liftSystem.reset();
