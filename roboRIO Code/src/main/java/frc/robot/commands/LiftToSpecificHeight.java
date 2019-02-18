@@ -10,11 +10,9 @@ public class LiftToSpecificHeight extends Command {
 
   static int heightID;
   static int height;
-  // static Encoder liftEncoder;
 
   public LiftToSpecificHeight(int _heightID) {
     heightID = _heightID;
-    //liftEncoder = new Encoder(/*Encoder Port*/);
 
   }
 

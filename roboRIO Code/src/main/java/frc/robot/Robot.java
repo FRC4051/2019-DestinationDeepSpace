@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import frc.robot.subsystems.*;
 import frc.robot.commands.*;
 
+import com.ctre.phoenix.motorcontrol.*;
+
 //import frc2019grip.*;
 
 import org.opencv.core.*;
@@ -119,7 +121,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     // Drive
-    Robot.driveTrain.enableArcadeDrive();
+    Robot.driveTrain.drive();
     // Hatch placer
     if(oi.mainController.getYButtonPressed()){
       ActivateHatchPlacer a = new ActivateHatchPlacer();
@@ -129,7 +131,6 @@ public class Robot extends TimedRobot {
       RetractHatchPlacer r = new RetractHatchPlacer();
       r.start();
     }
-    
     // Lift to specific height
     if(oi.mainController.getPOV(0) == 0){
       heightID++;
@@ -154,16 +155,15 @@ public class Robot extends TimedRobot {
       Robot.intake.setIdle();
     }
     // Reset encoder at home position to eliminate error
-    if(liftSystem.liftMotor.getSensorCollection().isRevLimitSwitchClosed()){
-      liftSystem.liftMotor.getSensorCollection().setQuadraturePosition(0, 500);
+    SensorCollection liftSensors = liftSystem.liftMotor.getSensorCollection();
+    if(liftSensors.isRevLimitSwitchClosed()){
+      liftSensors.setQuadraturePosition(0, 500);
     }
-    SmartDashboard.putNumber("Arm Encoder Position", liftSystem.liftMotor.getSensorCollection().getQuadraturePosition());
-    SmartDashboard.putNumber("Arm Encoder Velocity", liftSystem.liftMotor.getSensorCollection().getQuadratureVelocity());
-    SmartDashboard.putBoolean("Upper Arm Limit Switch", liftSystem.liftMotor.getSensorCollection().isFwdLimitSwitchClosed());
-    SmartDashboard.putBoolean("Lower Arm Limit Switch", liftSystem.liftMotor.getSensorCollection().isRevLimitSwitchClosed());
-    // For joysticks
-    // oi.hatchButton.whenPressed(new ActivateHatchPlacer());
-    // oi.hatchButton.whenReleased(new RetractHatchPlacer());
+    // Display on lift motor position & velocity on dashboard.
+    SmartDashboard.putNumber("Arm Encoder Position", liftSensors.getQuadraturePosition());
+    SmartDashboard.putNumber("Arm Encoder Velocity", liftSensors.getQuadratureVelocity());
+    SmartDashboard.putBoolean("Upper Arm Limit Switch", liftSensors.isFwdLimitSwitchClosed());
+    SmartDashboard.putBoolean("Lower Arm Limit Switch", liftSensors.isRevLimitSwitchClosed());
   }
 
 
