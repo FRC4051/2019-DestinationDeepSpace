@@ -37,6 +37,9 @@ public class Robot extends TimedRobot {
   public static int heightID;
   public static OI oi;
 
+  static boolean heightIncReq = false;
+  static boolean heightDecReq = false;
+
   // private static final int IMG_WIDTH = 640;
 	// private static final int IMG_HEIGHT = 480;
 	
@@ -135,14 +138,20 @@ public class Robot extends TimedRobot {
       r.start();
     }
     // Lift to specific height
-    if(oi.mainController.getPOV(0) == 0){
+    if(oi.mainController.getPOV(0) == 0 && heightID < 6){
+      heightIncReq = true;
+    }else if(heightIncReq){
       heightID++;
       SmartDashboard.putNumber("HeightID", heightID);
       new LiftToSpecificHeight(heightID);
-    }else if(oi.mainController.getPOV(0) == 180){
+      heightIncReq = false;
+    }else if(oi.mainController.getPOV(0) == 180 && heightID > 0){
+      heightDecReq = true;
+    }else if(heightDecReq){
       heightID--;
       SmartDashboard.putNumber("HeightID", heightID);
       new LiftToSpecificHeight(heightID);
+      heightDecReq = false;
     }else // Normal lift
     if(oi.mainController.getBumper(Hand.kLeft)){
       liftSystem.moveDown();
@@ -151,6 +160,7 @@ public class Robot extends TimedRobot {
     }else{
       liftSystem.reset();
     }
+
     // Intake
     if(Robot.oi.mainController.getAButton()){
       Robot.intake.pullInBall();

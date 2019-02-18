@@ -50,9 +50,9 @@ public class LiftToSpecificHeight extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if(height > LiftSystem.liftMotor.getSensorCollection().getQuadraturePosition()){
+    if(height > LiftSystem.liftSensors.getQuadraturePosition()){
       Robot.liftSystem.moveUp();
-    }else if(height < LiftSystem.liftMotor.getSensorCollection().getQuadraturePosition()){
+    }else if(height < LiftSystem.liftSensors.zgetQuadraturePosition()){
       Robot.liftSystem.moveDown();
     }else{
       Robot.liftSystem.reset();
