@@ -64,6 +64,9 @@ public class Robot extends TimedRobot {
     intake = new Intake();
     raiseTheRobot = new RaiseTheRobot();
     liftSystem = new LiftSystem();
+
+    SmartDashboard.putNumber("HeightID", heightID);
+
     /*
     cam = CameraServer.getInstance().startAutomaticCapture();
     CvSink cvSink = CameraServer.getInstance().getVideo();
@@ -134,9 +137,11 @@ public class Robot extends TimedRobot {
     // Lift to specific height
     if(oi.mainController.getPOV(0) == 0){
       heightID++;
+      SmartDashboard.putNumber("HeightID", heightID);
       new LiftToSpecificHeight(heightID);
     }else if(oi.mainController.getPOV(0) == 180){
       heightID--;
+      SmartDashboard.putNumber("HeightID", heightID);
       new LiftToSpecificHeight(heightID);
     }else // Normal lift
     if(oi.mainController.getBumper(Hand.kLeft)){
