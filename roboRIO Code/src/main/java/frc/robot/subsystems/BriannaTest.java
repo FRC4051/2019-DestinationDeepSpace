@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.*;
 /**
  * Add your docs here.
  */
+@SuppressWarnings ("all")
 public class BriannaTest extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.

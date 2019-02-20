@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.command.*;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 import frc.robot.subsystems.*;
-import frc.robot.commands.*;
 
 import com.ctre.phoenix.motorcontrol.*;
 
@@ -17,7 +16,6 @@ import frc.frc2019grip.*;
 
 import org.opencv.core.*;
 import org.opencv.imgproc.*;
-import edu.wpi.first.wpilibj.vision.VisionRunner;
 import edu.wpi.first.wpilibj.vision.VisionThread;
 import org.opencv.core.Rect;
 
@@ -27,13 +25,13 @@ import org.opencv.core.Rect;
  * creating this project, you must also update the build.gradle file in the
  * project.
  */
+@SuppressWarnings ("deprecation")
 public class Robot extends TimedRobot {
   public static DriveTrain driveTrain;
   public static HatchPlacer hatchPlacer;
   public static Intake intake;
   public static LiftSystem liftSystem;
   public static RaiseTheRobot raiseTheRobot;
-  public static Command liftToSpecificHeight;
   public static int heightID;
   public static int height = 0;
   public static OI oi;
@@ -89,12 +87,7 @@ public class Robot extends TimedRobot {
           //SmartDashboard.putNumber("Contour Area", (r.width * r.height));
           for(int i = 0; i < contours.size(); i++){
             Rect r = Imgproc.boundingRect(contours.get(i));
-            Imgproc.rectangle(output,
-              new Point(r.x, r.y),
-              new Point(r.x + r.width, r.y + r.height),
-              new Scalar(0, 0, 255),
-              5
-            );
+            Imgproc.rectangle(output, new Point(r.x, r.y), new Point(r.x + r.width, r.y + r.height), new Scalar(0, 0, 255), 5);
           }
           synchronized (imgLock) {
             Rect r2 = Imgproc.boundingRect(contours.get(0));
@@ -117,10 +110,8 @@ public class Robot extends TimedRobot {
     LiftSystem.liftMotor.configNominalOutputReverse(0, 30);
     LiftSystem.liftMotor.configPeakOutputForward(1, 30);
     LiftSystem.liftMotor.configPeakOutputReverse(-1, 30);
-
     LiftSystem.liftMotor.configMotionCruiseVelocity(15000, 30);
     LiftSystem.liftMotor.configMotionAcceleration(6000, 30);
-
     LiftSystem.liftMotor.selectProfileSlot(0, 0);
     LiftSystem.liftMotor.config_kF(0, 0.2, 30);
     LiftSystem.liftMotor.config_kP(0, 0.2, 30);
@@ -147,12 +138,10 @@ public class Robot extends TimedRobot {
     Robot.driveTrain.drive();
     // Hatch placer
     if(oi.mainController.getYButtonPressed()){
-      ActivateHatchPlacer a = new ActivateHatchPlacer();
-      a.start();
+      hatchPlacer.extend();
     }
     if(oi.mainController.getYButtonReleased()){
-      RetractHatchPlacer r = new RetractHatchPlacer();
-      r.start();
+      hatchPlacer.retract();
     }
     // Lift to specific height
     if(oi.mainController.getPOV(0) == 0 && heightID < 6){
@@ -188,14 +177,14 @@ public class Robot extends TimedRobot {
       Robot.intake.setIdle();
     }
     // Reset encoder at home position to eliminate error
-    if(liftSystem.liftSensors.isRevLimitSwitchClosed()){
-      liftSystem.liftSensors.setQuadraturePosition(0, 500);
+    if(LiftSystem.liftSensors.isRevLimitSwitchClosed()){
+      LiftSystem.liftSensors.setQuadraturePosition(0, 500);
     }
     // Display on lift motor position & velocity on dashboard.
-    SmartDashboard.putNumber("Arm Encoder Position", liftSystem.liftSensors.getQuadraturePosition());
-    SmartDashboard.putNumber("Arm Encoder Velocity", liftSystem.liftSensors.getQuadratureVelocity());
-    SmartDashboard.putBoolean("Upper Arm Limit Switch", liftSystem.liftSensors.isFwdLimitSwitchClosed());
-    SmartDashboard.putBoolean("Lower Arm Limit Switch", liftSystem.liftSensors.isRevLimitSwitchClosed());
+    SmartDashboard.putNumber("Arm Encoder Position", LiftSystem.liftSensors.getQuadraturePosition());
+    SmartDashboard.putNumber("Arm Encoder Velocity", LiftSystem.liftSensors.getQuadratureVelocity());
+    SmartDashboard.putBoolean("Upper Arm Limit Switch", LiftSystem.liftSensors.isFwdLimitSwitchClosed());
+    SmartDashboard.putBoolean("Lower Arm Limit Switch", LiftSystem.liftSensors.isRevLimitSwitchClosed());
     SmartDashboard.putNumber("HeightID", heightID);
   }
 

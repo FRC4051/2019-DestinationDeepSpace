@@ -7,7 +7,6 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.*;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -22,18 +21,10 @@ public class LiftSystem extends Subsystem {
   public static TalonSRX liftMotor = RobotMap.liftMotor;
   public static SensorCollection liftSensors = liftMotor.getSensorCollection();
 
-
-  public LiftSystem(){
-    // Encoder.
-    liftMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);
-    // Motion magic.
-    liftMotor.configNominalOutputForward(0, 30);
-		liftMotor.configNominalOutputReverse(0, 30);
-		liftMotor.configPeakOutputForward(1, 30);
-    liftMotor.configPeakOutputReverse(-1, 30);
-    liftMotor.configMotionCruiseVelocity(15000, 30);
-    liftMotor.configMotionAcceleration(6000, 30);
-  }
+  static {
+     // Encoder.
+     liftMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);
+  }   
 
   @Override
   public void initDefaultCommand() {
@@ -55,7 +46,5 @@ public class LiftSystem extends Subsystem {
   public void reset(){
     liftMotor.set(ControlMode.PercentOutput, 0);
   }
-  public void motionMagicMove(int pos){
-    liftMotor.set(ControlMode.MotionMagic, pos);
-  }
+
 }
