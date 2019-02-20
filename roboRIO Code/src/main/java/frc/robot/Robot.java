@@ -35,10 +35,14 @@ public class Robot extends TimedRobot {
   public static RaiseTheRobot raiseTheRobot;
   public static Command liftToSpecificHeight;
   public static int heightID;
+  public static int height = 0;
   public static OI oi;
-
+  public static boolean autoPilotArm = false;
   static boolean heightIncReq = false;
   static boolean heightDecReq = false;
+  public static int[] heights = {
+    0, 1500, 7500, 10500, 16500, 19500, 25400,
+  };
 
   private static final int IMG_WIDTH = 640;
 	private static final int IMG_HEIGHT = 480;
@@ -108,6 +112,20 @@ public class Robot extends TimedRobot {
     });
     visionThread.start();
 
+    LiftSystem.liftMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+    LiftSystem.liftMotor.configNominalOutputForward(0, 30);
+    LiftSystem.liftMotor.configNominalOutputReverse(0, 30);
+    LiftSystem.liftMotor.configPeakOutputForward(1, 30);
+    LiftSystem.liftMotor.configPeakOutputReverse(-1, 30);
+
+    LiftSystem.liftMotor.configMotionCruiseVelocity(15000, 30);
+    LiftSystem.liftMotor.configMotionAcceleration(6000, 30);
+
+    LiftSystem.liftMotor.selectProfileSlot(0, 0);
+    LiftSystem.liftMotor.config_kF(0, 0.2, 30);
+    LiftSystem.liftMotor.config_kP(0, 0.2, 30);
+    LiftSystem.liftMotor.config_kI(0, 0.0, 30);
+    LiftSystem.liftMotor.config_kD(0, 0.0, 30);
 
     compressor.setClosedLoopControl(true);
     //m_chooser.setDefaultOption("Default Auto", new ExampleCommand());
@@ -139,27 +157,28 @@ public class Robot extends TimedRobot {
     // Lift to specific height
     if(oi.mainController.getPOV(0) == 0 && heightID < 6){
       heightIncReq = true;
-    }else if(heightIncReq){
+    } else if(heightIncReq){
       heightID++;
-      SmartDashboard.putNumber("HeightID", heightID);
-      new LiftToSpecificHeight(heightID);
+      LiftSystem.liftMotor.set(ControlMode.MotionMagic, heights[heightID]);
       heightIncReq = false;
+      autoPilotArm = true;
     }else if(oi.mainController.getPOV(0) == 180 && heightID > 0){
       heightDecReq = true;
     }else if(heightDecReq){
       heightID--;
-      SmartDashboard.putNumber("HeightID", heightID);
-      new LiftToSpecificHeight(heightID);
+      LiftSystem.liftMotor.set(ControlMode.MotionMagic, heights[heightID]);
       heightDecReq = false;
-    }else // Normal lift
+      autoPilotArm = true;
+    } else // Normal lift
     if(oi.mainController.getBumper(Hand.kLeft)){
       liftSystem.moveDown();
+      autoPilotArm = false;
     }else if(oi.mainController.getBumper(Hand.kRight)){
+      autoPilotArm = false;
       liftSystem.moveUp();
-    }else{
+    }else if (!autoPilotArm){
       liftSystem.reset();
     }
-
     // Intake
     if(Robot.oi.mainController.getAButton()){
       Robot.intake.pullInBall();
@@ -177,8 +196,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Arm Encoder Velocity", liftSystem.liftSensors.getQuadratureVelocity());
     SmartDashboard.putBoolean("Upper Arm Limit Switch", liftSystem.liftSensors.isFwdLimitSwitchClosed());
     SmartDashboard.putBoolean("Lower Arm Limit Switch", liftSystem.liftSensors.isRevLimitSwitchClosed());
+    SmartDashboard.putNumber("HeightID", heightID);
   }
-
 
   /**
    * This autonomous (along with the chooser code above) shows how to select
