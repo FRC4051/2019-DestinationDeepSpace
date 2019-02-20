@@ -35,9 +35,9 @@ public class Robot extends TimedRobot {
   public static int heightID;
   public static int height = 0;
   public static OI oi;
-  public static boolean autoPilotArm = false;
-  static boolean heightIncReq = false;
-  static boolean heightDecReq = false;
+  //public static boolean autoPilotArm = false;
+  //static boolean heightIncReq = false;
+  //static boolean heightDecReq = false;
   public static int[] heights = {
     0, 1500, 7500, 10500, 16500, 19500, 25400,
   };
@@ -71,7 +71,7 @@ public class Robot extends TimedRobot {
     liftSystem = new LiftSystem();
 
     SmartDashboard.putNumber("HeightID", heightID);
-
+/*
     cam = CameraServer.getInstance().startAutomaticCapture();
     CvSink cvSink = CameraServer.getInstance().getVideo();
     CvSource outputStream = CameraServer.getInstance().putVideo("Detected", IMG_WIDTH, IMG_HEIGHT);
@@ -104,7 +104,7 @@ public class Robot extends TimedRobot {
       outputStream.putFrame(output);
     });
     visionThread.start();
-
+*/
     LiftSystem.liftMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
     LiftSystem.liftMotor.configNominalOutputForward(0, 30);
     LiftSystem.liftMotor.configNominalOutputReverse(0, 30);
@@ -144,48 +144,61 @@ public class Robot extends TimedRobot {
       hatchPlacer.retract();
     }
     // Lift to specific height
-    if(oi.mainController.getPOV(0) == 0 && heightID < 6){
-      heightIncReq = true;
-    } else if(heightIncReq){
-      heightID++;
-      LiftSystem.liftMotor.set(ControlMode.MotionMagic, heights[heightID]);
-      heightIncReq = false;
-      autoPilotArm = true;
-    }else if(oi.mainController.getPOV(0) == 180 && heightID > 0){
-      heightDecReq = true;
-    }else if(heightDecReq){
-      heightID--;
-      LiftSystem.liftMotor.set(ControlMode.MotionMagic, heights[heightID]);
-      heightDecReq = false;
-      autoPilotArm = true;
-    } else // Normal lift
-    if(oi.mainController.getBumper(Hand.kLeft)){
-      liftSystem.moveDown();
-      autoPilotArm = false;
-    }else if(oi.mainController.getBumper(Hand.kRight)){
-      autoPilotArm = false;
-      liftSystem.moveUp();
-    }else if (!autoPilotArm){
-      liftSystem.reset();
+    // if(oi.mainController.getPOV(0) == 0 && heightID < 6){
+    //   heightIncReq = true;
+    // } else if(heightIncReq){
+    //   heightID++;
+    //   LiftSystem.liftMotor.set(ControlMode.MotionMagic, heights[heightID]);
+    //   heightIncReq = false;
+    //   autoPilotArm = true;
+    // }else if(oi.mainController.getPOV(0) == 180 && heightID > 0){
+    //   heightDecReq = true;
+    // }else if(heightDecReq){
+    //   heightID--;
+    //   LiftSystem.liftMotor.set(ControlMode.MotionMagic, heights[heightID]);
+    //   heightDecReq = false;
+    //   autoPilotArm = true;
+    // } else // Normal lift
+    // if(oi.mainController.getBumper(Hand.kLeft)){
+    //   liftSystem.moveDown();
+    //   autoPilotArm = false;
+    // }else if(oi.mainController.getBumper(Hand.kRight)){
+    //   autoPilotArm = false;
+    //   liftSystem.moveUp();
+    // }else if (!autoPilotArm){
+    //   liftSystem.reset();
+    // }
+    if(oi.mainController.getBumperPressed(Hand.kRight)){
+      if(heightID < heights.length - 1)  {
+        heightID++;
+      }
+    }else if(oi.mainController.getBumperPressed(Hand.kLeft)){
+      if(heightID > 0) {
+        heightID--;
+      }
     }
-    // Intake
-    if(Robot.oi.mainController.getAButton()){
-      Robot.intake.pullInBall();
-    }else if(Robot.oi.mainController.getBButton()){
-      Robot.intake.yeetOutBall();
-    }else{
-      Robot.intake.setIdle();
+    LiftSystem.liftMotor.set(ControlMode.MotionMagic, heights[heightID]);
+
+    if (oi.mainController.getPOV() == 180) {
+      LiftSystem.liftMotor.set(ControlMode.PercentOutput, -1);  
     }
-    // Reset encoder at home position to eliminate error
+    if (oi.mainController.getPOV() == 0) {
+      LiftSystem.liftMotor.set(ControlMode.PercentOutput, 1);  
+    }
     if(LiftSystem.liftSensors.isRevLimitSwitchClosed()){
       LiftSystem.liftSensors.setQuadraturePosition(0, 500);
+      System.out.println("**** RESET ZERO ****");
     }
-    // Display on lift motor position & velocity on dashboard.
-    SmartDashboard.putNumber("Arm Encoder Position", LiftSystem.liftSensors.getQuadraturePosition());
-    SmartDashboard.putNumber("Arm Encoder Velocity", LiftSystem.liftSensors.getQuadratureVelocity());
-    SmartDashboard.putBoolean("Upper Arm Limit Switch", LiftSystem.liftSensors.isFwdLimitSwitchClosed());
-    SmartDashboard.putBoolean("Lower Arm Limit Switch", LiftSystem.liftSensors.isRevLimitSwitchClosed());
-    SmartDashboard.putNumber("HeightID", heightID);
+
+    // Intake
+    if(oi.mainController.getTriggerAxis(Hand.kLeft) > 0.3){
+      intake.pullInBall();
+    }else if(oi.mainController.getTriggerAxis(Hand.kRight) > 0.3){
+      intake.yeetOutBall();
+    }else{
+      intake.setIdle();
+    }
+    // Reset encoder at home position to eliminate error
   }
 
   /**
@@ -221,6 +234,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
+    // Display on lift motor position & velocity on dashboard.
+    SmartDashboard.putNumber("Arm Encoder Position", LiftSystem.liftSensors.getQuadraturePosition());
+    SmartDashboard.putNumber("Arm Encoder Velocity", LiftSystem.liftSensors.getQuadratureVelocity());
+    SmartDashboard.putBoolean("Upper Arm Limit Switch", LiftSystem.liftSensors.isFwdLimitSwitchClosed());
+    SmartDashboard.putBoolean("Lower Arm Limit Switch", LiftSystem.liftSensors.isRevLimitSwitchClosed());
+    SmartDashboard.putNumber("HeightID", heightID);
     Scheduler.getInstance().run();
   }
 
@@ -240,6 +259,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    // Display on lift motor position & velocity on dashboard.
+    SmartDashboard.putNumber("Arm Encoder Position", LiftSystem.liftSensors.getQuadraturePosition());
+    SmartDashboard.putNumber("Arm Encoder Velocity", LiftSystem.liftSensors.getQuadratureVelocity());
+    SmartDashboard.putBoolean("Upper Arm Limit Switch", LiftSystem.liftSensors.isFwdLimitSwitchClosed());
+    SmartDashboard.putBoolean("Lower Arm Limit Switch", LiftSystem.liftSensors.isRevLimitSwitchClosed());
+    SmartDashboard.putNumber("HeightID", heightID);
     Scheduler.getInstance().run();
   }
 
