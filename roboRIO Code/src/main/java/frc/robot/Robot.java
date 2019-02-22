@@ -32,8 +32,11 @@ public class Robot extends TimedRobot {
   public static Intake intake;
   public static LiftSystem liftSystem;
   public static RaiseTheRobot raiseTheRobot;
+
   public static int heightID;
   public static int height = 0;
+  public static boolean hatchPlacerExtended = false;
+
   public static OI oi;
   //public static boolean autoPilotArm = false;
   //static boolean heightIncReq = false;
@@ -52,6 +55,7 @@ public class Robot extends TimedRobot {
 
   static Compressor compressor = new Compressor(0);
   static UsbCamera cam;
+  static UsbCamera cam2;
 
   //Command m_autonomousCommand;
   //SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -71,8 +75,9 @@ public class Robot extends TimedRobot {
     liftSystem = new LiftSystem();
 
     SmartDashboard.putNumber("HeightID", heightID);
-/*
+
     cam = CameraServer.getInstance().startAutomaticCapture();
+    cam2 = CameraServer.getInstance().startAutomaticCapture();
     CvSink cvSink = CameraServer.getInstance().getVideo();
     CvSource outputStream = CameraServer.getInstance().putVideo("Detected", IMG_WIDTH, IMG_HEIGHT);
     cam.setResolution(IMG_WIDTH, IMG_HEIGHT);
@@ -104,7 +109,7 @@ public class Robot extends TimedRobot {
       outputStream.putFrame(output);
     });
     visionThread.start();
-*/
+
     LiftSystem.liftMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
     LiftSystem.liftMotor.configNominalOutputForward(0, 30);
     LiftSystem.liftMotor.configNominalOutputReverse(0, 30);
@@ -138,10 +143,13 @@ public class Robot extends TimedRobot {
     Robot.driveTrain.drive();
     // Hatch placer
     if(oi.mainController.getYButtonPressed()){
-      hatchPlacer.extend();
-    }
-    if(oi.mainController.getYButtonReleased()){
-      hatchPlacer.retract();
+      if(hatchPlacerExtended) {
+        hatchPlacer.retract();
+        hatchPlacerExtended = false;
+      }else{
+        hatchPlacer.extend();
+        hatchPlacerExtended = true;
+      }
     }
     // Lift to specific height
     // if(oi.mainController.getPOV(0) == 0 && heightID < 6){
