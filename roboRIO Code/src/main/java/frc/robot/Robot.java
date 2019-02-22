@@ -36,7 +36,7 @@ public class Robot extends TimedRobot {
   public static int heightID;
   public static int height = 0;
   public static boolean hatchPlacerExtended = false;
-  public static boolean processVision = true;// manually set value.
+  public static boolean processVision = false;// manually set value.
 
   public static OI oi;
   //public static boolean autoPilotArm = false;
