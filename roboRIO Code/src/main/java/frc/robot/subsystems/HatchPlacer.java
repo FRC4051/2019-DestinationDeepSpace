@@ -20,11 +20,11 @@ public class HatchPlacer extends Subsystem {
     // setDefaultCommand(new MySpecialCommand());
   }
 
-  public void extend(){
+  public static void extend(){
     linearSolenoid.set(DoubleSolenoid.Value.kReverse);
   }
 
-  public void retract(){
+  public static void retract(){
     linearSolenoid.set(DoubleSolenoid.Value.kForward);
   }
 }

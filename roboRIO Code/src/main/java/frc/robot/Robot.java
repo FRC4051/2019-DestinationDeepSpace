@@ -27,18 +27,16 @@ import org.opencv.core.Rect;
  */
 @SuppressWarnings ("deprecation")
 public class Robot extends TimedRobot {
-  public static DriveTrain driveTrain;
-  public static HatchPlacer hatchPlacer;
-  public static Intake intake;
-  public static LiftSystem liftSystem;
+
   public static RaiseTheRobot raiseTheRobot;
+
+  public static XboxController mainController = new XboxController(0);
 
   public static int heightID;
   public static int height = 0;
   public static boolean hatchPlacerExtended = false;
   public static boolean processVision = false;// manually set value.
 
-  public static OI oi;
   //public static boolean autoPilotArm = false;
   //static boolean heightIncReq = false;
   //static boolean heightDecReq = false;
@@ -68,12 +66,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     heightID = 0;
-    oi = new OI();
-    driveTrain = new DriveTrain();
-    hatchPlacer = new HatchPlacer();
-    intake = new Intake();
     raiseTheRobot = new RaiseTheRobot();
-    liftSystem = new LiftSystem();
 
     SmartDashboard.putNumber("HeightID", heightID);
 
@@ -142,14 +135,14 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     // Drive
-    Robot.driveTrain.drive();
+    DriveTrain.drive();
     // Hatch placer
-    if(oi.mainController.getYButtonPressed()){
+    if(mainController.getYButtonPressed()){
       if(hatchPlacerExtended) {
-        hatchPlacer.retract();
+        HatchPlacer.retract();
         hatchPlacerExtended = false;
       }else{
-        hatchPlacer.extend();
+        HatchPlacer.extend();
         hatchPlacerExtended = true;
       }
     }
@@ -178,35 +171,34 @@ public class Robot extends TimedRobot {
     // }else if (!autoPilotArm){
     //   liftSystem.reset();
     // }
-    if(oi.mainController.getBumperPressed(Hand.kRight)){
+    // Specific lift
+    if(mainController.getBumperPressed(Hand.kRight)){
       if(heightID < heights.length - 1)  {
         heightID++;
       }
-    }else if(oi.mainController.getBumperPressed(Hand.kLeft)){
+    }else if(mainController.getBumperPressed(Hand.kLeft)){
       if(heightID > 0) {
         heightID--;
       }
     }
     LiftSystem.liftMotor.set(ControlMode.MotionMagic, heights[heightID]);
-
-    if (oi.mainController.getPOV() == 180) {
+    // Normal lift
+    if (mainController.getPOV() == 180) {
       LiftSystem.liftMotor.set(ControlMode.PercentOutput, -1);  
     }
-    if (oi.mainController.getPOV() == 0) {
+    if (mainController.getPOV() == 0) {
       LiftSystem.liftMotor.set(ControlMode.PercentOutput, 1);  
     }
     if(LiftSystem.liftSensors.isRevLimitSwitchClosed()){
       LiftSystem.liftSensors.setQuadraturePosition(0, 500);
-      System.out.println("**** RESET ZERO ****");
     }
-
     // Intake
-    if(oi.mainController.getTriggerAxis(Hand.kLeft) > 0.3){
-      intake.pullInBall();
-    }else if(oi.mainController.getTriggerAxis(Hand.kRight) > 0.3){
-      intake.yeetOutBall();
+    if(mainController.getTriggerAxis(Hand.kLeft) > 0.3){
+      Intake.pullInBall();
+    }else if(mainController.getTriggerAxis(Hand.kRight) > 0.3){
+      Intake.yeetOutBall();
     }else{
-      intake.setIdle();
+      Intake.setIdle();
     }
     // Reset encoder at home position to eliminate error
   }
