@@ -36,6 +36,7 @@ public class Robot extends TimedRobot {
   public static int heightID;
   public static int height = 0;
   public static boolean hatchPlacerExtended = false;
+  public static boolean processVision = true;// manually set value.
 
   public static OI oi;
   //public static boolean autoPilotArm = false;
@@ -78,8 +79,9 @@ public class Robot extends TimedRobot {
 
     cam = CameraServer.getInstance().startAutomaticCapture();
     cam2 = CameraServer.getInstance().startAutomaticCapture();
+    if(processVision){
     CvSink cvSink = CameraServer.getInstance().getVideo();
-    CvSource outputStream = CameraServer.getInstance().putVideo("Detected", IMG_WIDTH, IMG_HEIGHT);
+    CvSource outputStream = CameraServer.getInstance().putVideo("Processed", IMG_WIDTH, IMG_HEIGHT);
     cam.setResolution(IMG_WIDTH, IMG_HEIGHT);
     cam.setBrightness(50);
     Mat source = new Mat();
@@ -109,7 +111,7 @@ public class Robot extends TimedRobot {
       outputStream.putFrame(output);
     });
     visionThread.start();
-
+    }
     LiftSystem.liftMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
     LiftSystem.liftMotor.configNominalOutputForward(0, 30);
     LiftSystem.liftMotor.configNominalOutputReverse(0, 30);
