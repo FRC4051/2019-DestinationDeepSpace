@@ -18,8 +18,15 @@ public class DriveTrain extends Subsystem {
   static VictorSPX rightDriveMotor = RobotMap.driveMotor2;
 
   public static void drive(){
+    // Tank drive
     leftDriveMotor.set(ControlMode.PercentOutput, Robot.mainController.getY(Hand.kRight) * 1);
     rightDriveMotor.set(ControlMode.PercentOutput, Robot.mainController.getY(Hand.kLeft) * -1);
+    // Double-joystick arcade drive
+    //leftDriveMotor.set(ControlMode.PercentOutput, Robot.mainController.getY(Hand.kLeft) - Robot.mainController.getY(Hand.kRight));
+    //rightDriveMotor.set(ControlMode.PercentOutput, Robot.mainController.getY(Hand.kRight) - Robot.mainController.getY(Hand.kLeft));
+    // Single-joystick arcade drive
+    //leftDriveMotor.set(ControlMode.PercentOutput, (Robot.mainController.getY(Hand.kLeft) - Robot.mainController.getX(Hand.kLeft))/2);
+    //rightDriveMotor.set(ControlMode.PercentOutput, (Robot.mainController.getY(Hand.kLeft) + Robot.mainController.getX(Hand.kLeft))/2);
   }
 
   @Override
