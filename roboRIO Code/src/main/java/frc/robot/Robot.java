@@ -35,7 +35,7 @@ public class Robot extends TimedRobot {
   public static int heightID;
   public static int height = 0;
   public static boolean hatchPlacerExtended = false;
-  public static boolean processVision = false;// manually set value.
+  public static boolean processVision = true;// manually set value.
 
   //public static boolean autoPilotArm = false;
   //static boolean heightIncReq = false;
@@ -44,9 +44,9 @@ public class Robot extends TimedRobot {
     0, 1500, 7500, 10500, 16500, 19500, 25400,
   };
 
-  private static final int IMG_WIDTH = 640;
-	private static final int IMG_HEIGHT = 480;
-	
+  private static final int IMG_WIDTH = 160;
+	private static final int IMG_HEIGHT = 120;
+	private static final int IMG_FPS = 10;
   private VisionThread visionThread;
   private final Object imgLock = new Object();
   public static long rectArea;
@@ -72,9 +72,12 @@ public class Robot extends TimedRobot {
 
     cam = CameraServer.getInstance().startAutomaticCapture();
     cam2 = CameraServer.getInstance().startAutomaticCapture();
+    cam.setFPS(IMG_FPS);
+    cam2.setFPS(IMG_FPS);
     if(processVision){
     CvSink cvSink = CameraServer.getInstance().getVideo();
     CvSource outputStream = CameraServer.getInstance().putVideo("Processed", IMG_WIDTH, IMG_HEIGHT);
+    outputStream.setFPS(IMG_FPS);
     cam.setResolution(IMG_WIDTH, IMG_HEIGHT);
     cam.setBrightness(50);
     Mat source = new Mat();
