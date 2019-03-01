@@ -35,13 +35,14 @@ public class Robot extends TimedRobot {
   public static int heightID;
   public static int height = 0;
   public static boolean hatchPlacerExtended = false;
+  
   public static boolean processVision = true;// manually set value.
-
+  private static boolean usingLegacyLift = false;// false: switch between all heights. true: switch between either hatch heights or ball heights. New lift is untested.
   //public static boolean autoPilotArm = false;
   //static boolean heightIncReq = false;
   //static boolean heightDecReq = false;
   public static int[] heights = {
-    0, 1500, 7500, 10500, 16500, 19500, 25400,
+    0/*idle*/, 1500/*hatch*/, 7500/*ball*/, 10500/*hatch*/, 16500/*ball*/, 19500/*hatch*/, 25400/*ball*/,
   };
 
   private static final int IMG_WIDTH = 160;
@@ -174,7 +175,39 @@ public class Robot extends TimedRobot {
     // }else if (!autoPilotArm){
     //   liftSystem.reset();
     // }
-    // Specific lift
+
+    // Specific lift v2.0
+    if(usingLegacyLift){
+      if(mainController.getBumperPressed(Hand.kRight)){
+        if(heightID < heights.length - 1)  {
+          heightID++;
+        }
+      }else if(mainController.getBumperPressed(Hand.kLeft)){
+        if(heightID > 0) {
+          heightID--;
+        }
+      }
+    }else{
+      //ball
+      if(mainController.getBumperPressed(Hand.kRight)){
+        if(heightID < heights.length - 1)  {
+          heightID += 2;
+        }else{
+          heightID = 0;
+        }
+      }else 
+      //hatch
+      if(mainController.getBumperPressed(Hand.kLeft)){
+        if(heightID == 0)
+          heightID++;
+        else if(heightID < heights.length - 1)  {
+          heightID += 2;
+        } else if(heightID == heights.length){
+          heightID = 0;
+        }
+      }
+    }
+
     if(mainController.getBumperPressed(Hand.kRight)){
       if(heightID < heights.length - 1)  {
         heightID++;
