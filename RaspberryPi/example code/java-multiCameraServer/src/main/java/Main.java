@@ -15,6 +15,7 @@ import edu.wpi.cscore.*;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.vision.*;
+import edu.wpi.first.wpilibj.smartdashboard.*;
 
 import org.opencv.core.*;
 import org.opencv.imgproc.*;	
@@ -54,6 +55,7 @@ import org.opencv.imgproc.*;
    }
  */
 
+@SuppressWarnings ("deprecation")
 public final class Main {
   private static String configFile = "/boot/frc.json";
 
@@ -203,6 +205,9 @@ public final class Main {
   /**
    * Main.
    */
+  public static long rectArea;
+  public static long rectArea2;
+
   public static void main(String... args) {
     if (args.length > 0) {
       configFile = args[0];
@@ -246,32 +251,29 @@ public final class Main {
       });
        */
       //visionThread.start();
-      UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
-      UsbCamera cam2 = CameraServer.getInstance().startAutomaticCapture();
+      
       int IMG_WIDTH = 160;
       int IMG_HEIGHT = 120;
       int IMG_FPS = 10;
       Object imgLock = new Object();
-      long rectArea;
-      long rectArea2;
-      cam.setFPS(IMG_FPS);
-      cam2.setFPS(IMG_FPS);
+      for(VideoSource cam : cameras){
+        cam.setFPS(IMG_FPS);
+        cam.setResolution(IMG_WIDTH, IMG_HEIGHT);
+      }
       CvSink cvSink = CameraServer.getInstance().getVideo();
-      CvSource outputStream = CameraServer.getInstance().putVideo("Processed", IMG_WIDTH, IMG_HEIGHT);
+      CvSource outputStream = CameraServer.getInstance().putVideo("rPi Processed Target", IMG_WIDTH, IMG_HEIGHT);
       outputStream.setFPS(IMG_FPS);
-      cam.setResolution(IMG_WIDTH, IMG_HEIGHT);
-      cam.setBrightness(50);
       Mat source = new Mat();
       Mat output = new Mat();
-      VisionThread visionThread = new VisionThread(cam, new GripPipeline(), pipeline -> {
+      VisionThread visionThread = new VisionThread(cameras.get(0), new GripPipeline(), pipeline -> {
         cvSink.grabFrame(source);
         Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2RGB);
         ArrayList<MatOfPoint> contours = pipeline.filterContoursOutput();
         if (!contours.isEmpty()) {
-          //SmartDashboard.putNumber("Contour Area", (r.width * r.height));
           for(int i = 0; i < contours.size(); i++){
             Rect r = Imgproc.boundingRect(contours.get(i));
             Imgproc.rectangle(output, new Point(r.x, r.y), new Point(r.x + r.width, r.y + r.height), new Scalar(0, 0, 255), 5);
+            SmartDashboard.putNumber("Contour Area", (r.width * r.height));
           }
           synchronized (imgLock) {
             Rect r2 = Imgproc.boundingRect(contours.get(0));

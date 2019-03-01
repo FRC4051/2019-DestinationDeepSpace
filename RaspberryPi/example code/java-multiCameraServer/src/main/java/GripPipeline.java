@@ -4,7 +4,7 @@ import java.util.List;
 import org.opencv.core.*;
 import org.opencv.imgproc.*;	
 
-import edu.wpi.first.wpilibj.vision.VisionPipeline;
+import edu.wpi.first.vision.VisionPipeline;
 
 /**
 * GripPipeline class.

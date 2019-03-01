@@ -25,7 +25,7 @@ import org.opencv.core.Rect;
  * creating this project, you must also update the build.gradle file in the
  * project.
  */
-@SuppressWarnings ("deprecation")
+// @SuppressWarnings ("deprecation")
 public class Robot extends TimedRobot {
 
   public static RaiseTheRobot raiseTheRobot;
@@ -71,11 +71,11 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putNumber("HeightID", heightID);
 
+    if(processVision){
     cam = CameraServer.getInstance().startAutomaticCapture();
     cam2 = CameraServer.getInstance().startAutomaticCapture();
     cam.setFPS(IMG_FPS);
     cam2.setFPS(IMG_FPS);
-    if(processVision){
     CvSink cvSink = CameraServer.getInstance().getVideo();
     CvSource outputStream = CameraServer.getInstance().putVideo("Processed", IMG_WIDTH, IMG_HEIGHT);
     outputStream.setFPS(IMG_FPS);
