@@ -184,8 +184,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Arm Encoder Velocity", LiftSystem.liftSensors.getQuadratureVelocity());
     SmartDashboard.putBoolean("Upper Arm Limit Switch", LiftSystem.liftSensors.isFwdLimitSwitchClosed());
     SmartDashboard.putBoolean("Lower Arm Limit Switch", LiftSystem.liftSensors.isRevLimitSwitchClosed());
-    SmartDashboard.putNumber("HeightID", heightID);  
-  }
+    SmartDashboard.putNumber("HeightID", heightID);
+    }
 
   private void processVision(){
     UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
