@@ -2,7 +2,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.*;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
@@ -13,8 +12,8 @@ public class RobotMap {
 
   public static TalonSRX intakeMotor1 = new TalonSRX(1);
   public static TalonSRX liftMotor = new TalonSRX(2);
-  public static VictorSPX driveMotor1 = new VictorSPX(4);
-  public static VictorSPX driveMotor2 = new VictorSPX(3);
+  public static TalonSRX driveMotor1 = new TalonSRX(4);
+  public static TalonSRX driveMotor2 = new TalonSRX(3);
   public static TalonSRX intakeMotor2 = new TalonSRX(6);
   public static DoubleSolenoid solenoid1 = new DoubleSolenoid(0,1);
   // public static DoubleSolenoid solenoid2 = new DoubleSolenoid(2,3);

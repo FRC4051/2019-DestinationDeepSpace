@@ -333,9 +333,9 @@ public final class Main {
       //visionThread.start();
 
       //Jinhai Vision Processing Start.
-      int IMG_WIDTH = 320;
-      int IMG_HEIGHT = 240;
-      int IMG_FPS = 25;
+      int IMG_WIDTH = 160;
+      int IMG_HEIGHT = 120;
+      int IMG_FPS = 20;
       Object imgLock = new Object();
       for(VideoSource cam : cameras){
         cam.setFPS(IMG_FPS);
@@ -353,11 +353,13 @@ public final class Main {
         if (!contours.isEmpty()) {
           long rectArea;
           long rectArea2;
+          // Find total contour area.
           for(int i = 0; i < contours.size(); i++){
             Rect r = Imgproc.boundingRect(contours.get(i));
             Imgproc.rectangle(output, new Point(r.x, r.y), new Point(r.x + r.width, r.y + r.height), new Scalar(0, 0, 255), 5);
             SmartDashboard.putNumber("Contour Area", (r.width * r.height));
           }
+          // Find individualized rectangle areas.
           synchronized (imgLock) {
             Rect r2 = Imgproc.boundingRect(contours.get(0));
             rectArea = r2.width * r2.height;

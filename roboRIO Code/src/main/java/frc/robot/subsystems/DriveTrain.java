@@ -29,6 +29,12 @@ public class DriveTrain extends Subsystem {
     //rightDriveMotor.set(ControlMode.PercentOutput, (Robot.mainController.getY(Hand.kLeft) + Robot.mainController.getX(Hand.kLeft))/2);
   }
 
+  public static void seekTarget(double rectArea1, double rectArea2){
+    double ratio = rectArea1/rectArea2;
+    leftDriveMotor.set(ControlMode.PercentOutput, ratio/4);
+    rightDriveMotor.set(ControlMode.PercentOutput, -0.2);
+  }
+
   @Override
   public void initDefaultCommand() {
     // Default command for the drive train.

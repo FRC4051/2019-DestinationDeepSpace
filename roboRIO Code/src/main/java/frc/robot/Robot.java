@@ -33,7 +33,6 @@ public class Robot extends TimedRobot {
   public static int height = 0;
   public static boolean hatchPlacerExtended = false;
   
-  public static boolean processVision = true;// manually set value.
   private static boolean usingLegacyLift = false;// false: switch between all heights. true: switch between either hatch heights or ball heights. New lift is untested.
   //public static boolean autoPilotArm = false;
   //static boolean heightIncReq = false;
@@ -42,10 +41,6 @@ public class Robot extends TimedRobot {
   public static final int[] heights = {
     0/*idle*/, 1500/*hatch*/, 7500/*ball*/, 10500/*hatch*/, 16500/*ball*/, 19500/*hatch*/, 25400/*ball*/,
   };
-
-  private static final int IMG_WIDTH = 160;
-	private static final int IMG_HEIGHT = 120;
-	private static final int IMG_FPS = 10;
 
   private static Compressor compressor = new Compressor(0);
   //Command m_autonomousCommand;
@@ -60,9 +55,6 @@ public class Robot extends TimedRobot {
     heightID = 0;
     SmartDashboard.putNumber("HeightID", heightID);
 
-    if(processVision){
-      processVision();
-    }
     configLiftMotor();
 
     compressor.setClosedLoopControl(true);
@@ -82,7 +74,13 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     // Drive
-    DriveTrain.drive();
+    if(mainController.getXButton()){
+      double rectArea1 = (double) SmartDashboard.getNumber("rectArea 1", 1);
+      double rectArea2 = (double) SmartDashboard.getNumber("rectArea 2", 1);
+      DriveTrain.seekTarget(rectArea1, rectArea2);
+    }
+    else
+      DriveTrain.drive();
     // Hatch placer
     if(mainController.getYButtonPressed()){
       if(hatchPlacerExtended) {
@@ -150,16 +148,6 @@ public class Robot extends TimedRobot {
         }
       }
     }
-
-    if(mainController.getBumperPressed(Hand.kRight)){
-      if(heightID < heights.length - 1)  {
-        heightID++;
-      }
-    }else if(mainController.getBumperPressed(Hand.kLeft)){
-      if(heightID > 0) {
-        heightID--;
-      }
-    }
     LiftSystem.liftMotor.set(ControlMode.MotionMagic, heights[heightID]);
     // Normal lift
     if (mainController.getPOV() == 180) {
@@ -185,47 +173,6 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("Upper Arm Limit Switch", LiftSystem.liftSensors.isFwdLimitSwitchClosed());
     SmartDashboard.putBoolean("Lower Arm Limit Switch", LiftSystem.liftSensors.isRevLimitSwitchClosed());
     SmartDashboard.putNumber("HeightID", heightID);
-    }
-
-  private void processVision(){
-    UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
-    UsbCamera cam2 = CameraServer.getInstance().startAutomaticCapture();
-    cam.setFPS(IMG_FPS);
-    cam2.setFPS(IMG_FPS);
-    CvSink cvSink = CameraServer.getInstance().getVideo();
-    CvSource outputStream = CameraServer.getInstance().putVideo("Processed", IMG_WIDTH, IMG_HEIGHT);
-    outputStream.setFPS(IMG_FPS);
-    cam.setResolution(IMG_WIDTH, IMG_HEIGHT);
-    cam.setBrightness(50);
-    Mat source = new Mat();
-    Mat output = new Mat();
-    final Object imgLock = new Object();
-    VisionThread visionThread = new VisionThread(cam, new GripPipeline(), pipeline -> {
-      cvSink.grabFrame(source);
-      Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2RGB);
-      ArrayList<MatOfPoint> contours = pipeline.filterContoursOutput();
-      if (!contours.isEmpty()) {
-        long rectArea;
-        long rectArea2;
-        //SmartDashboard.putNumber("Contour Area", (r.width * r.height));
-        for(int i = 0; i < contours.size(); i++){
-          Rect r = Imgproc.boundingRect(contours.get(i));
-          Imgproc.rectangle(output, new Point(r.x, r.y), new Point(r.x + r.width, r.y + r.height), new Scalar(0, 0, 255), 5);
-        }
-        synchronized (imgLock) {
-          Rect r2 = Imgproc.boundingRect(contours.get(0));
-          rectArea = r2.width * r2.height;
-          SmartDashboard.putNumber("rectArea 1", rectArea);
-          if(contours.size()>1) {
-            Rect r3 = Imgproc.boundingRect(contours.get(1));
-            rectArea2 = r3.width * r3.height;
-            SmartDashboard.putNumber("rectArea 2", rectArea2);
-          }
-        }
-      }
-      outputStream.putFrame(output);
-    });
-    visionThread.start();
   }
 
   private void configLiftMotor(){
