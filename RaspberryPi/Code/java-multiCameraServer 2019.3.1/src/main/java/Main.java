@@ -333,9 +333,9 @@ public final class Main {
       //visionThread.start();
 
       //Jinhai Vision Processing Start.
-      int IMG_WIDTH = 160;
-      int IMG_HEIGHT = 120;
-      int IMG_FPS = 10;
+      int IMG_WIDTH = 320;
+      int IMG_HEIGHT = 240;
+      int IMG_FPS = 25;
       Object imgLock = new Object();
       for(VideoSource cam : cameras){
         cam.setFPS(IMG_FPS);
