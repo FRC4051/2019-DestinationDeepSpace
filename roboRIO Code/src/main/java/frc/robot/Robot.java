@@ -8,11 +8,10 @@ import edu.wpi.cscore.*;
 import edu.wpi.first.wpilibj.command.*;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 
+import frc.frc2019grip.*;
 import frc.robot.subsystems.*;
 
 import com.ctre.phoenix.motorcontrol.*;
-
-import frc.frc2019grip.*;
 
 import org.opencv.core.*;
 import org.opencv.imgproc.*;
@@ -25,10 +24,8 @@ import org.opencv.core.Rect;
  * creating this project, you must also update the build.gradle file in the
  * project.
  */
-// @SuppressWarnings ("deprecation")
+@SuppressWarnings ("deprecation")
 public class Robot extends TimedRobot {
-
-  public static RaiseTheRobot raiseTheRobot;
 
   public static XboxController mainController = new XboxController(0);
 
@@ -41,22 +38,16 @@ public class Robot extends TimedRobot {
   //public static boolean autoPilotArm = false;
   //static boolean heightIncReq = false;
   //static boolean heightDecReq = false;
-  public static int[] heights = {
+  
+  public static final int[] heights = {
     0/*idle*/, 1500/*hatch*/, 7500/*ball*/, 10500/*hatch*/, 16500/*ball*/, 19500/*hatch*/, 25400/*ball*/,
   };
 
   private static final int IMG_WIDTH = 160;
 	private static final int IMG_HEIGHT = 120;
 	private static final int IMG_FPS = 10;
-  private VisionThread visionThread;
-  private final Object imgLock = new Object();
-  public static long rectArea;
-  public static long rectArea2;
 
-  static Compressor compressor = new Compressor(0);
-  static UsbCamera cam;
-  static UsbCamera cam2;
-
+  private static Compressor compressor = new Compressor(0);
   //Command m_autonomousCommand;
   //SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -67,60 +58,12 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     heightID = 0;
-    raiseTheRobot = new RaiseTheRobot();
-
     SmartDashboard.putNumber("HeightID", heightID);
 
     if(processVision){
-    cam = CameraServer.getInstance().startAutomaticCapture();
-    cam2 = CameraServer.getInstance().startAutomaticCapture();
-    cam.setFPS(IMG_FPS);
-    cam2.setFPS(IMG_FPS);
-    CvSink cvSink = CameraServer.getInstance().getVideo();
-    CvSource outputStream = CameraServer.getInstance().putVideo("Processed", IMG_WIDTH, IMG_HEIGHT);
-    outputStream.setFPS(IMG_FPS);
-    cam.setResolution(IMG_WIDTH, IMG_HEIGHT);
-    cam.setBrightness(50);
-    Mat source = new Mat();
-    Mat output = new Mat();
-    visionThread = new VisionThread(cam, new GripPipeline(), pipeline -> {
-      cvSink.grabFrame(source);
-      Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2RGB);
-      ArrayList<MatOfPoint> contours = pipeline.filterContoursOutput();
-      if (!contours.isEmpty()) {
-          //SmartDashboard.putNumber("Contour Area", (r.width * r.height));
-          for(int i = 0; i < contours.size(); i++){
-            Rect r = Imgproc.boundingRect(contours.get(i));
-            Imgproc.rectangle(output, new Point(r.x, r.y), new Point(r.x + r.width, r.y + r.height), new Scalar(0, 0, 255), 5);
-          }
-          synchronized (imgLock) {
-            Rect r2 = Imgproc.boundingRect(contours.get(0));
-            rectArea = r2.width * r2.height;
-            SmartDashboard.putNumber("rectArea 1", rectArea);
-
-            if(contours.size()>1) {
-              Rect r3 = Imgproc.boundingRect(contours.get(1));
-              rectArea2 = r3.width * r3.height;
-              SmartDashboard.putNumber("rectArea 2", rectArea2);
-            }
-          }
-      }
-      outputStream.putFrame(output);
-    });
-    visionThread.start();
+      processVision();
     }
-    LiftSystem.liftMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-    LiftSystem.liftMotor.configNominalOutputForward(0, 30);
-    LiftSystem.liftMotor.configNominalOutputReverse(0, 30);
-    LiftSystem.liftMotor.configPeakOutputForward(1, 30);
-    LiftSystem.liftMotor.configPeakOutputReverse(-1, 30);
-    LiftSystem.liftMotor.configMotionCruiseVelocity(15000, 30);
-    LiftSystem.liftMotor.configMotionAcceleration(6000, 30);
-    LiftSystem.liftMotor.selectProfileSlot(0, 0);
-    LiftSystem.liftMotor.config_kF(0, 0.2, 30);
-    LiftSystem.liftMotor.config_kP(0, 0.2, 30);
-    LiftSystem.liftMotor.config_kI(0, 0.0, 30);
-    LiftSystem.liftMotor.config_kD(0, 0.0, 30);
+    configLiftMotor();
 
     compressor.setClosedLoopControl(true);
     //m_chooser.setDefaultOption("Default Auto", new ExampleCommand());
@@ -236,9 +179,69 @@ public class Robot extends TimedRobot {
     }else{
       Intake.setIdle();
     }
-    // Reset encoder at home position to eliminate error
+    // Display on lift motor position & velocity on dashboard.
+    SmartDashboard.putNumber("Arm Encoder Position", LiftSystem.liftSensors.getQuadraturePosition());
+    SmartDashboard.putNumber("Arm Encoder Velocity", LiftSystem.liftSensors.getQuadratureVelocity());
+    SmartDashboard.putBoolean("Upper Arm Limit Switch", LiftSystem.liftSensors.isFwdLimitSwitchClosed());
+    SmartDashboard.putBoolean("Lower Arm Limit Switch", LiftSystem.liftSensors.isRevLimitSwitchClosed());
+    SmartDashboard.putNumber("HeightID", heightID);  
   }
 
+  private void processVision(){
+    UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
+    UsbCamera cam2 = CameraServer.getInstance().startAutomaticCapture();
+    cam.setFPS(IMG_FPS);
+    cam2.setFPS(IMG_FPS);
+    CvSink cvSink = CameraServer.getInstance().getVideo();
+    CvSource outputStream = CameraServer.getInstance().putVideo("Processed", IMG_WIDTH, IMG_HEIGHT);
+    outputStream.setFPS(IMG_FPS);
+    cam.setResolution(IMG_WIDTH, IMG_HEIGHT);
+    cam.setBrightness(50);
+    Mat source = new Mat();
+    Mat output = new Mat();
+    final Object imgLock = new Object();
+    VisionThread visionThread = new VisionThread(cam, new GripPipeline(), pipeline -> {
+      cvSink.grabFrame(source);
+      Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2RGB);
+      ArrayList<MatOfPoint> contours = pipeline.filterContoursOutput();
+      if (!contours.isEmpty()) {
+        long rectArea;
+        long rectArea2;
+        //SmartDashboard.putNumber("Contour Area", (r.width * r.height));
+        for(int i = 0; i < contours.size(); i++){
+          Rect r = Imgproc.boundingRect(contours.get(i));
+          Imgproc.rectangle(output, new Point(r.x, r.y), new Point(r.x + r.width, r.y + r.height), new Scalar(0, 0, 255), 5);
+        }
+        synchronized (imgLock) {
+          Rect r2 = Imgproc.boundingRect(contours.get(0));
+          rectArea = r2.width * r2.height;
+          SmartDashboard.putNumber("rectArea 1", rectArea);
+          if(contours.size()>1) {
+            Rect r3 = Imgproc.boundingRect(contours.get(1));
+            rectArea2 = r3.width * r3.height;
+            SmartDashboard.putNumber("rectArea 2", rectArea2);
+          }
+        }
+      }
+      outputStream.putFrame(output);
+    });
+    visionThread.start();
+  }
+
+  private void configLiftMotor(){
+    LiftSystem.liftMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+    LiftSystem.liftMotor.configNominalOutputForward(0, 30);
+    LiftSystem.liftMotor.configNominalOutputReverse(0, 30);
+    LiftSystem.liftMotor.configPeakOutputForward(1, 30);
+    LiftSystem.liftMotor.configPeakOutputReverse(-1, 30);
+    LiftSystem.liftMotor.configMotionCruiseVelocity(15000, 30);
+    LiftSystem.liftMotor.configMotionAcceleration(6000, 30);
+    LiftSystem.liftMotor.selectProfileSlot(0, 0);
+    LiftSystem.liftMotor.config_kF(0, 0.2, 30);
+    LiftSystem.liftMotor.config_kP(0, 0.2, 30);
+    LiftSystem.liftMotor.config_kI(0, 0.0, 30);
+    LiftSystem.liftMotor.config_kD(0, 0.0, 30);
+  }
   /**
    * This autonomous (along with the chooser code above) shows how to select
    * between different autonomous modes using the dashboard. The sendable
@@ -272,12 +275,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    // Display on lift motor position & velocity on dashboard.
-    SmartDashboard.putNumber("Arm Encoder Position", LiftSystem.liftSensors.getQuadraturePosition());
-    SmartDashboard.putNumber("Arm Encoder Velocity", LiftSystem.liftSensors.getQuadratureVelocity());
-    SmartDashboard.putBoolean("Upper Arm Limit Switch", LiftSystem.liftSensors.isFwdLimitSwitchClosed());
-    SmartDashboard.putBoolean("Lower Arm Limit Switch", LiftSystem.liftSensors.isRevLimitSwitchClosed());
-    SmartDashboard.putNumber("HeightID", heightID);
     Scheduler.getInstance().run();
   }
 
@@ -297,12 +294,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    // Display on lift motor position & velocity on dashboard.
-    SmartDashboard.putNumber("Arm Encoder Position", LiftSystem.liftSensors.getQuadraturePosition());
-    SmartDashboard.putNumber("Arm Encoder Velocity", LiftSystem.liftSensors.getQuadratureVelocity());
-    SmartDashboard.putBoolean("Upper Arm Limit Switch", LiftSystem.liftSensors.isFwdLimitSwitchClosed());
-    SmartDashboard.putBoolean("Lower Arm Limit Switch", LiftSystem.liftSensors.isRevLimitSwitchClosed());
-    SmartDashboard.putNumber("HeightID", heightID);
     Scheduler.getInstance().run();
   }
 
