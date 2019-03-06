@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.*;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.*;
@@ -14,8 +14,8 @@ public class DriveTrain extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  static VictorSPX leftDriveMotor = RobotMap.driveMotor1;
-  static VictorSPX rightDriveMotor = RobotMap.driveMotor2;
+  static TalonSRX leftDriveMotor = RobotMap.driveMotor1;
+  static TalonSRX rightDriveMotor = RobotMap.driveMotor2;
 
   public static void drive(){
     // Tank drive

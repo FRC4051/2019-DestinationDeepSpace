@@ -4,27 +4,18 @@ import java.util.*;
 
 import edu.wpi.first.wpilibj.smartdashboard.*;
 import edu.wpi.first.wpilibj.*;
-import edu.wpi.cscore.*;
 import edu.wpi.first.wpilibj.command.*;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 
-import frc.frc2019grip.*;
 import frc.robot.subsystems.*;
 
 import com.ctre.phoenix.motorcontrol.*;
-
-import org.opencv.core.*;
-import org.opencv.imgproc.*;
-import edu.wpi.first.wpilibj.vision.VisionThread;
-import org.opencv.core.Rect;
-
 /** ss, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
  * documentation. If you change the name of this class or the package after
  * creating this project, you must also update the build.gradle file in the
  * project.
  */
-@SuppressWarnings ("deprecation")
 public class Robot extends TimedRobot {
 
   public static XboxController mainController = new XboxController(0);
