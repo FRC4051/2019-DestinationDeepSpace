@@ -24,14 +24,14 @@ public class Intake extends Subsystem {
   //sets motors to direction -1 (going in) and pulls in the ball for a set amount of time
   public static void pullInBall(){
     // Pull in ball. 
-    leftIntakeMotor.set(ControlMode.PercentOutput, -.7);
-    rightIntakeMotor.set(ControlMode.PercentOutput, .7);
+    leftIntakeMotor.set(ControlMode.PercentOutput, .7);
+    rightIntakeMotor.set(ControlMode.PercentOutput, -.7);
   }
 
   public static void yeetOutBall(){
     // Launch out ball.
-    leftIntakeMotor.set(ControlMode.PercentOutput, 1);
-    rightIntakeMotor.set(ControlMode.PercentOutput, -1);
+    leftIntakeMotor.set(ControlMode.PercentOutput, -1);
+    rightIntakeMotor.set(ControlMode.PercentOutput, 1);
   }
 
   public static void setIdle(){

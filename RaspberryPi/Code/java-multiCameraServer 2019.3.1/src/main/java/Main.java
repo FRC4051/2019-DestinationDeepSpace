@@ -374,8 +374,8 @@ public final class Main {
         outputStream.putFrame(output);
       });
       visionThread.start();
+      // Jinhai's Vision Processing End.
     }
-    // Jinhai's Vision Processing End.
 
     // loop forever
     for (;;) {

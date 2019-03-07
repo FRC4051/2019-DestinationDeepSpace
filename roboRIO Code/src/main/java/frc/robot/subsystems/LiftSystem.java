@@ -34,7 +34,7 @@ public class LiftSystem extends Subsystem {
 
   public void moveUp() {
     //will move giraffe up
-    if(liftSensors.getQuadraturePosition() > 18000) liftMotor.set(ControlMode.PercentOutput, 0.5);
+    if(liftSensors.getQuadraturePosition() > 18000) liftMotor.set(ControlMode.PercentOutput, 0.8);
     else liftMotor.set(ControlMode.PercentOutput, 1);
   }
 

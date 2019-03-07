@@ -4,8 +4,17 @@ import java.util.*;
 
 import edu.wpi.first.wpilibj.smartdashboard.*;
 import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.command.*;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+
+import edu.wpi.cscore.*;
+import edu.wpi.first.cameraserver.*;
+import edu.wpi.first.networktables.*;
+import edu.wpi.first.vision.*;
+
+import org.opencv.core.*;
+import org.opencv.imgproc.*;	
 
 import frc.robot.subsystems.*;
 
@@ -23,14 +32,14 @@ public class Robot extends TimedRobot {
   public static int heightID;
   public static int height = 0;
   public static boolean hatchPlacerExtended = false;
-  
+  public static boolean ballOrHatch = false; //"true or false :: ball or hatch"
   private static boolean usingLegacyLift = false;// false: switch between all heights. true: switch between either hatch heights or ball heights. New lift is untested.
   //public static boolean autoPilotArm = false;
   //static boolean heightIncReq = false;
   //static boolean heightDecReq = false;
   
   public static final int[] heights = {
-    0/*idle*/, 1500/*hatch*/, 7500/*ball*/, 10500/*hatch*/, 16500/*ball*/, 19500/*hatch*/, 25400/*ball*/,
+    -100/*idle*/, 2000/*hatch*/, 8000/*ball*/, 11000/*hatch*/, 17000/*ball*/, 20000/*hatch*/, 25900/*ball*/,
   };
 
   private static Compressor compressor = new Compressor(0);
@@ -122,7 +131,11 @@ public class Robot extends TimedRobot {
     }else{
       //ball
       if(mainController.getBumperPressed(Hand.kRight)){
-        if(heightID < heights.length - 1)  {
+        if(!ballOrHatch){
+          heightID = 0;
+          ballOrHatch = true ;
+        }
+        else if(heightID < heights.length - 1)  {
           heightID += 2;
         }else{
           heightID = 0;
@@ -130,22 +143,27 @@ public class Robot extends TimedRobot {
       }else 
       //hatch
       if(mainController.getBumperPressed(Hand.kLeft)){
-        if(heightID == 0)
+        if(ballOrHatch){
+          heightID = 0;
+          ballOrHatch = false;
+        }
+        else if(heightID == 0)
           heightID++;
-        else if(heightID < heights.length - 1)  {
+        else if(heightID < heights.length - 2)  {
           heightID += 2;
-        } else if(heightID == heights.length){
+        } else {
           heightID = 0;
         }
       }
     }
-    LiftSystem.liftMotor.set(ControlMode.MotionMagic, heights[heightID]);
-    // Normal lift
+    //LiftSystem.liftMotor.set(ControlMode.MotionMagic, heights[heightID]);
+    //Normal lift
     if (mainController.getPOV() == 180) {
       LiftSystem.liftMotor.set(ControlMode.PercentOutput, -1);  
-    }
-    if (mainController.getPOV() == 0) {
+    }else if (mainController.getPOV() == 0) {
       LiftSystem.liftMotor.set(ControlMode.PercentOutput, 1);  
+    }else {
+      LiftSystem.liftMotor.set(ControlMode.PercentOutput, 0);  
     }
     if(LiftSystem.liftSensors.isRevLimitSwitchClosed()){
       LiftSystem.liftSensors.setQuadraturePosition(0, 500);
@@ -164,6 +182,50 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("Upper Arm Limit Switch", LiftSystem.liftSensors.isFwdLimitSwitchClosed());
     SmartDashboard.putBoolean("Lower Arm Limit Switch", LiftSystem.liftSensors.isRevLimitSwitchClosed());
     SmartDashboard.putNumber("HeightID", heightID);
+
+    // UNFINISHED RE-IMPORT
+    // int IMG_WIDTH = 160;
+    // int IMG_HEIGHT = 120;
+    // int IMG_FPS = 20;
+    // Object imgLock = new Object();
+    // List<VideoSource> cameras = new ArrayList<>();
+    // for(VideoSource cam : cameras){
+    //   cam.setFPS(IMG_FPS);
+    //   cam.setResolution(IMG_WIDTH, IMG_HEIGHT);
+    // }
+    // CvSink cvSink = CameraServer.getInstance().getVideo();
+    // CvSource outputStream = CameraServer.getInstance().putVideo("rPi Processed Target", IMG_WIDTH, IMG_HEIGHT);
+    // outputStream.setFPS(IMG_FPS);
+    // Mat source = new Mat();
+    // Mat output = new Mat();
+    // VisionThread visionThread = new VisionThread(cameras.get(0), new GripPipeline(), pipeline -> {
+    //   cvSink.grabFrame(source);
+    //   Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2RGB);
+    //   ArrayList<MatOfPoint> contours = pipeline.filterContoursOutput();
+    //   if (!contours.isEmpty()) {
+    //     long rectArea;
+    //     long rectArea2;
+    //     // Find total contour area.
+    //     for(int i = 0; i < contours.size(); i++){
+    //       Rect r = Imgproc.boundingRect(contours.get(i));
+    //       Imgproc.rectangle(output, new Point(r.x, r.y), new Point(r.x + r.width, r.y + r.height), new Scalar(0, 0, 255), 5);
+    //       SmartDashboard.putNumber("Contour Area", (r.width * r.height));
+    //     }
+    //     // Find individualized rectangle areas.
+    //     synchronized (imgLock) {
+    //       Rect r2 = Imgproc.boundingRect(contours.get(0));
+    //       rectArea = r2.width * r2.height;
+    //       SmartDashboard.putNumber("rectArea 1", rectArea);
+    //       if(contours.size()>1) {
+    //         Rect r3 = Imgproc.boundingRect(contours.get(1));
+    //         rectArea2 = r3.width * r3.height;
+    //         SmartDashboard.putNumber("rectArea 2", rectArea2);
+    //       }
+    //     }
+    //   }
+    //   outputStream.putFrame(output);
+    // });
+    // visionThread.start();
   }
 
   private void configLiftMotor(){
