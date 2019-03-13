@@ -25,18 +25,18 @@ public class Intake extends Subsystem {
 
   //sets motors to direction -1 (going in) and pulls in the ball for a set amount of time
   public static void pullInBall(){
-    if(startingTime == 0) {
-      startingTime = System.currentTimeMillis();
-    }
-    currentTime = System.currentTimeMillis() - startingTime;
-    double desiredPercentOutput = 0.3;
-    if(currentTime < 500) {
-      double deltaTime = currentTime / 500.0;
-      desiredPercentOutput = 0.5 - (deltaTime * 0.2);
-    }
+    // if(startingTime == 0) {
+    //   startingTime = System.currentTimeMillis();
+    // }
+    // currentTime = System.currentTimeMillis() - startingTime;
+    // double desiredPercentOutput = 0.8;
+    // if(currentTime < 500) {
+    //   double deltaTime = currentTime / 500.0; 
+    //   desiredPercentOutput = 1.0 - (deltaTime * 0.2);
+    // }
     // Pull in ball. 
-    leftIntakeMotor.set(ControlMode.PercentOutput, desiredPercentOutput);
-    rightIntakeMotor.set(ControlMode.PercentOutput, -desiredPercentOutput);    
+    leftIntakeMotor.set(ControlMode.PercentOutput, 1/*desiredPercentOutput*/);
+    rightIntakeMotor.set(ControlMode.PercentOutput, -1/*desiredPercentOutput*/);    
   }
 
   public static void yeetOutBall(){
@@ -44,10 +44,10 @@ public class Intake extends Subsystem {
       startingTime = System.currentTimeMillis();
     }
     currentTime = System.currentTimeMillis() - startingTime;
-    double desiredPercentOutput = 0.3;
+    double desiredPercentOutput = 0.5;
     if(currentTime < 500) {
       double deltaTime = currentTime / 500.0;
-      desiredPercentOutput = 1.0 - (deltaTime * 0.7);
+      desiredPercentOutput = 1.0 - (deltaTime * 0.5);
     }
     // Launch out ball.
     leftIntakeMotor.set(ControlMode.PercentOutput, -desiredPercentOutput);

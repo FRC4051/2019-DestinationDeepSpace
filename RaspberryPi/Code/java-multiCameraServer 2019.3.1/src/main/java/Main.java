@@ -346,7 +346,7 @@ public final class Main {
       outputStream.setFPS(IMG_FPS);
       Mat source = new Mat();
       Mat output = new Mat();
-      VisionThread visionThread = new VisionThread(cameras.get(0), new GripPipeline(), pipeline -> {
+      VisionThread visionThread = new VisionThread(cameras.get(1), new GripPipeline(), pipeline -> {
         cvSink.grabFrame(source);
         Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2RGB);
         ArrayList<MatOfPoint> contours = pipeline.filterContoursOutput();
