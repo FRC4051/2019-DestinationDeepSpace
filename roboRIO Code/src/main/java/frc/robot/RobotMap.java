@@ -16,8 +16,7 @@ public class RobotMap {
   public static TalonSRX driveMotor2 = new TalonSRX(4);
   public static TalonSRX intakeMotor2 = new TalonSRX(6);
   public static DoubleSolenoid solenoid1 = new DoubleSolenoid(0,1);
-  // public static DoubleSolenoid solenoid2 = new DoubleSolenoid(2,3);
-  // public static DoubleSolenoid solenoid3 = new DoubleSolenoid(4,5);
-  // public static DoubleSolenoid solenoid4 = new DoubleSolenoid(6,7);
-  // public static DoubleSolenoid solenoid5 = new DoubleSolenoid(8,9);
+  public static DoubleSolenoid solenoid2 = new DoubleSolenoid(2,3);
+  public static DoubleSolenoid solenoid3 = new DoubleSolenoid(4,5);
+  public static DoubleSolenoid solenoid4 = new DoubleSolenoid(6,7);
 }

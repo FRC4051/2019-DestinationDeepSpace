@@ -180,53 +180,24 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Arm Encoder Position", LiftSystem.liftSensors.getQuadraturePosition());
     SmartDashboard.putNumber("Arm Encoder Velocity", LiftSystem.liftSensors.getQuadratureVelocity());
     SmartDashboard.putBoolean("Upper Arm Limit Switch", LiftSystem.liftSensors.isFwdLimitSwitchClosed());
-    SmartDashboard.putBoolean("Lower Arm Limit Switch", LiftSystem.liftSensors.isRevLimitSwitchClosed());
+    SmartDashboard.putBoolean("Lower Arm Limit Sw itch", LiftSystem.liftSensors.isRevLimitSwitchClosed());
     SmartDashboard.putNumber("HeightID", heightID);
 
-    // UNFINISHED RE-IMPORT
-    // int IMG_WIDTH = 160;
-    // int IMG_HEIGHT = 120;
-    // int IMG_FPS = 20;
-    // Object imgLock = new Object();
-    // List<VideoSource> cameras = new ArrayList<>();
-    // for(VideoSource cam : cameras){
-    //   cam.setFPS(IMG_FPS);
-    //   cam.setResolution(IMG_WIDTH, IMG_HEIGHT);
-    // }
-    // CvSink cvSink = CameraServer.getInstance().getVideo();
-    // CvSource outputStream = CameraServer.getInstance().putVideo("rPi Processed Target", IMG_WIDTH, IMG_HEIGHT);
-    // outputStream.setFPS(IMG_FPS);
-    // Mat source = new Mat();
-    // Mat output = new Mat();
-    // VisionThread visionThread = new VisionThread(cameras.get(0), new GripPipeline(), pipeline -> {
-    //   cvSink.grabFrame(source);
-    //   Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2RGB);
-    //   ArrayList<MatOfPoint> contours = pipeline.filterContoursOutput();
-    //   if (!contours.isEmpty()) {
-    //     long rectArea;
-    //     long rectArea2;
-    //     // Find total contour area.
-    //     for(int i = 0; i < contours.size(); i++){
-    //       Rect r = Imgproc.boundingRect(contours.get(i));
-    //       Imgproc.rectangle(output, new Point(r.x, r.y), new Point(r.x + r.width, r.y + r.height), new Scalar(0, 0, 255), 5);
-    //       SmartDashboard.putNumber("Contour Area", (r.width * r.height));
-    //     }
-    //     // Find individualized rectangle areas.
-    //     synchronized (imgLock) {
-    //       Rect r2 = Imgproc.boundingRect(contours.get(0));
-    //       rectArea = r2.width * r2.height;
-    //       SmartDashboard.putNumber("rectArea 1", rectArea);
-    //       if(contours.size()>1) {
-    //         Rect r3 = Imgproc.boundingRect(contours.get(1));
-    //         rectArea2 = r3.width * r3.height;
-    //         SmartDashboard.putNumber("rectArea 2", rectArea2);
-    //       }
-    //     }
-    //   }
-    //   outputStream.putFrame(output);
-    // });
-    // visionThread.start();
+    if(mainController.getAButtonPressed()){
+      RaiseTheRobot.lowerRobotFront();
+    }
+    else if(mainController.getAButtonReleased()){
+      RaiseTheRobot.raiseRobotFront();
+    }
+    else if(mainController.getBButtonPressed()) {
+      RaiseTheRobot.lowerRobotBack();
+    }
+    else if(mainController.getBButtonReleased()) {
+      RaiseTheRobot.raiseRobotBack();
+    }
+
   }
+
 
   private void configLiftMotor(){
     LiftSystem.liftMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
