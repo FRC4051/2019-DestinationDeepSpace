@@ -4,17 +4,8 @@ import java.util.*;
 
 import edu.wpi.first.wpilibj.smartdashboard.*;
 import edu.wpi.first.wpilibj.*;
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.command.*;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-
-import edu.wpi.cscore.*;
-import edu.wpi.first.cameraserver.*;
-import edu.wpi.first.networktables.*;
-import edu.wpi.first.vision.*;
-
-import org.opencv.core.*;
-import org.opencv.imgproc.*;	
 
 import frc.robot.subsystems.*;
 
@@ -28,6 +19,7 @@ import com.ctre.phoenix.motorcontrol.*;
 public class Robot extends TimedRobot {
 
   public static XboxController mainController = new XboxController(0);
+  public static Joystick sideController = new Joystick(1);
 
   public static int heightID;
   public static int height = 0;
@@ -82,7 +74,7 @@ public class Robot extends TimedRobot {
     else
       DriveTrain.drive();
     // Hatch placer
-    if(mainController.getYButtonPressed()){
+    if(mainController.getYButtonPressed() || sideController.getRawButtonPressed(0)){
       if(hatchPlacerExtended) {
         HatchPlacer.retract();
         hatchPlacerExtended = false;
@@ -118,53 +110,54 @@ public class Robot extends TimedRobot {
     // }
 
     // Specific lift v2.0
-    if(usingLegacyLift){
-      if(mainController.getBumperPressed(Hand.kRight)){
-        if(heightID < heights.length - 1)  {
-          heightID++;
-        }
-      }else if(mainController.getBumperPressed(Hand.kLeft)){
-        if(heightID > 0) {
-          heightID--;
-        }
-      }
-    }else{
-      //ball
-      if(mainController.getBumperPressed(Hand.kRight)){
-        if(!ballOrHatch){
-          heightID = 0;
-          ballOrHatch = true ;
-        }
-        else if(heightID < heights.length - 1)  {
-          heightID += 2;
-        }else{
-          heightID = 0;
-        }
-      }else 
-      //hatch
-      if(mainController.getBumperPressed(Hand.kLeft)){
-        if(ballOrHatch){
-          heightID = 0;
-          ballOrHatch = false;
-        }
-        else if(heightID == 0)
-          heightID++;
-        else if(heightID < heights.length - 2)  {
-          heightID += 2;
-        } else {
-          heightID = 0;
-        }
-      }
-    }
+    // if(usingLegacyLift){
+    //   if(mainController.getBumperPressed(Hand.kRight)){
+    //     if(heightID < heights.length - 1)  {
+    //       heightID++;
+    //     }
+    //   }else if(mainController.getBumperPressed(Hand.kLeft)){
+    //     if(heightID > 0) {
+    //       heightID--;
+    //     }
+    //   }
+    // }else{
+    //   //ball
+    //   if(mainController.getBumperPressed(Hand.kRight)){
+    //     if(!ballOrHatch){
+    //       heightID = 0;
+    //       ballOrHatch = true ;
+    //     }
+    //     else if(heightID < heights.length - 1)  {
+    //       heightID += 2;
+    //     }else{
+    //       heightID = 0;
+    //     }
+    //   }else 
+    //   //hatch
+    //   if(mainController.getBumperPressed(Hand.kLeft)){
+    //     if(ballOrHatch){
+    //       heightID = 0;
+    //       ballOrHatch = false;
+    //     }
+    //     else if(heightID == 0)
+    //       heightID++;
+    //     else if(heightID < heights.length - 2)  {
+    //       heightID += 2;
+    //     } else {
+    //       heightID = 0;
+    //     }
+    //   }
+    // }
     //LiftSystem.liftMotor.set(ControlMode.MotionMagic, heights[heightID]);
     //Normal lift
-    if (mainController.getPOV() == 180) {
+    if (mainController.getPOV() == 180 || sideController.getY() < -0.3 || mainController.getBumper(Hand.kLeft)) {
       LiftSystem.liftMotor.set(ControlMode.PercentOutput, -1);  
-    }else if (mainController.getPOV() == 0) {
+    }else if (mainController.getPOV() == 0 || sideController.getY() > 0.3 || mainController.getBumper(Hand.kRight)) {
       LiftSystem.liftMotor.set(ControlMode.PercentOutput, 1);  
     }else {
       LiftSystem.liftMotor.set(ControlMode.PercentOutput, 0);  
     }
+
     if(LiftSystem.liftSensors.isRevLimitSwitchClosed()){
       LiftSystem.liftSensors.setQuadraturePosition(0, 500);
     }
